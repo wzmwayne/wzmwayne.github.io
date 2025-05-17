@@ -1,1 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Links with Custom Cursor Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+            cursor: none; /* 隐藏默认鼠标 */
+            overflow: hidden; /* 禁止滚动 */
+        }
+        .button-container {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: none; /* 确保按钮上也隐藏默认鼠标 */
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .custom-cursor {
+            position: absolute;
+            width: 32px; /* 根据需要调整大小 */
+            height: 32px; /* 根据需要调整大小 */
+            pointer-events: none; /* 不影响鼠标事件 */
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container" id="buttonContainer"></div>
+    <img src="https://github.com/wzmwayne/wzmwayne.github.io/raw/b461935d4929e87c5a28020e9b7d0295f5d9700c/gsb.png" alt="Custom Cursor" class="custom-cursor">
+
+    <script>
+        // 字典包含按钮名和对应的跳转链接
+        const buttonLinks = {
+            "Google": "https://www.google.com",
+            "GitHub": "https://www.github.com",
+            "Stack Overflow": "https://stackoverflow.com",
+        };
+
+        // 获取按钮容器元素
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        // 创建按钮并添加到容器中
+        for (const [name, link] of Object.entries(buttonLinks)) {
+            const button = document.createElement('button');
+            button.textContent = name;
+            button.addEventListener('click', () => {
+                window.open(link, '_blank'); // 在新标签页打开链接
+            });
+            buttonContainer.appendChild(button);
+        }
+
+        // 获取自定义光标图像元素
+        const customCursor = document.querySelector('.custom-cursor');
+
+        // 初始化自定义光标位置
+        document.addEventListener('mousemove', (event) => {
+            event.preventDefault(); // 阻止默认的鼠标移动行为
+
+            // 更新自定义光标的位置，使其左上角与鼠标对齐
+            customCursor.style.left = `${event.clientX}px`;
+            customCursor.style.top = `${event.clientY}px`;
+        }, { passive: false }); // 确保可以阻止默认行为
+
+        // 监听鼠标按下事件
+        document.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            const elements = document.elementsFromPoint(
+                parseFloat(customCursor.style.left || '0'),
+                parseFloat(customCursor.style.top || '0')
+            );
+            elements.forEach(element => {
+                if (element.tagName === 'BUTTON') {
+                    element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                }
+            });
+        }, { passive: false });
+
+        // 监听鼠标释放事件
+        document.addEventListener('mouseup', (event) => {
+            event.preventDefault();
+            const elements = document.elementsFromPoint(
+                parseFloat(customCursor.style.left || '0'),
+                parseFloat(customCursor.style.top || '0')
+            );
+            elements.forEach(element => {
+                if (element.tagName === 'BUTTON') {
+                    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+                }
+            });
+        }, { passive: false });
+
+        // 监听点击事件
+        document.addEventListener('click', (event) => {
+            event.preventDefault();
+            const elements = document.elementsFromPoint(
+                parseFloat(customCursor.style.left || '0'),
+                parseFloat(customCursor.style.top || '0')
+            );
+            elements.forEach(element => {
+                if (element.tagName === 'BUTTON') {
+                    element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                }
+            });
+        }, { passive: false });
+
+        // 阻止浏览器默认的右键菜单
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
+
+
+
 
