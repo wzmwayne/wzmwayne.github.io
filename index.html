@@ -17,10 +17,21 @@
             overflow: hidden; /* 禁止滚动 */
         }
         .button-container {
-            display: flex;
+            display: grid;
             gap: 20px;
             position: relative;
             z-index: 1;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+            .button-container {
+                grid-template-columns: 1fr;
+            }
         }
         button {
             padding: 15px 30px;
@@ -30,7 +41,8 @@
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            cursor: none; /* 确保按钮上也隐藏默认鼠标 */
+            cursor: none;
+            width: 100%; /* 保持按钮填充容器 */
         }
         button:hover {
             background-color: #0056b3;
@@ -43,9 +55,26 @@
             pointer-events: none; /* 不影响鼠标事件 */
             z-index: 2;
         }
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        @media (max-width: 600px) {
+            .page-title {
+                font-size: 1.8rem;
+                margin: 15px 0 15px;
+            }
+        }
     </style>
+
 </head>
 <body>
+<h2 class="page-title">玩坏电脑的小站</h2>
     <div class="button-container" id="buttonContainer"></div>
     <img src="https://github.com/wzmwayne/wzmwayne.github.io/raw/b461935d4929e87c5a28020e9b7d0295f5d9700c/gsb.png" alt="Custom Cursor" class="custom-cursor">
 
