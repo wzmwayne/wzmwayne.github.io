@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,7 +40,6 @@
             }
         }
 
-        /* 栏目网格容器 */
         .categories-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -52,7 +51,6 @@
             z-index: 1;
         }
 
-        /* 单个栏目卡片 */
         .category-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
@@ -82,7 +80,6 @@
             user-select: none;
         }
 
-        /* 按钮样式 */
         button {
             padding: 14px 18px;
             font-size: 15px;
@@ -98,6 +95,8 @@
             text-align: center;
             word-break: break-word;
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden; /* 为涟漪效果准备 */
         }
 
         button:hover {
@@ -110,7 +109,23 @@
             transform: scale(0.97);
         }
 
-        /* 自定义光标 */
+        /* 涟漪元素样式（由灵蝶插入） */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
         .custom-cursor {
             position: fixed;
             width: 32px;
@@ -141,10 +156,22 @@
     <img src="https://github.com/wzmwayne/wzmwayne.github.io/raw/b461935d4929e87c5a28020e9b7d0295f5d9700c/gsb.png"
     alt="Custom Cursor" class="custom-cursor" id="customCursor">
 
+    <!-- 灵蝶未安装提示（普通 script 即可，所有浏览器执行） -->
+    <div id="sw-install-hint" style="position:fixed;bottom:20px;right:20px;background:#2c3e50;color:#ecf0f1;padding:10px 16px;border-radius:4px;font-size:14px;z-index:9999;display:none;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+        ⚡ 点击按钮有涟漪特效？<a href="https://github.com/wzmwayne/ScriptWeaver" target="_blank" style="color:#3b82f6;text-decoration:underline;">安装灵蝶</a> 解锁更多玩法
+    </div>
+    <script>
+        (function() {
+            if (!window.__ScriptWeaver__) {
+                document.getElementById('sw-install-hint').style.display = 'block';
+            }
+        })();
+    </script>
+
+    <!-- 核心功能（普通脚本，保证基础可用） -->
     <script>
         (function() {
             // ========== 嵌套字典：按类型分栏 ==========
-            // 外层键 = 栏目名称，内层键值对 = 按钮名称: 链接
             const categories = {
                 "下载项目资源": {
                     "下载 BetterSeewo": "https://wzmwayne.github.io/betterseewo/",
@@ -155,7 +182,7 @@
                 "在线工具": {
                     "Online CMD": "https://wzmwayne.github.io/onlin_cmd/",
                     "增加文件大小": "https://wzmwayne.github.io/Increase_File_Size/",
-                    "PrintHelper在线灵蝶版"： "https://wzmwayne.github.io/print_helper/"
+                    "PrintHelper在线灵蝶版": "https://wzmwayne.github.io/print_helper/"
                 },
                 "游戏与启动": {
                     "MC Lunch": "https://wzmwayne.github.io/mclunch/"
@@ -172,26 +199,18 @@
             const container = document.getElementById('categoriesContainer');
             const customCursor = document.getElementById('customCursor');
 
-            // 根据嵌套字典动态生成栏目和按钮
             function renderCategories() {
-                container.innerHTML = ''; // 清空容器
-
+                container.innerHTML = '';
                 for (const [categoryName, buttons] of Object.entries(categories)) {
-                    // 创建栏目卡片
                     const card = document.createElement('div');
                     card.className = 'category-card';
-
-                    // 栏目标题
                     const title = document.createElement('h3');
                     title.className = 'category-title';
                     title.textContent = categoryName;
                     card.appendChild(title);
-
-                    // 为每个按钮创建元素
                     for (const [btnName, link] of Object.entries(buttons)) {
                         const button = document.createElement('button');
                         button.textContent = btnName;
-                        // 绑定事件，防止重复打开
                         button.addEventListener('click', (e) => {
                             e.stopPropagation();
                             e.preventDefault();
@@ -201,14 +220,13 @@
                         button.addEventListener('mousedown', (e) => e.stopPropagation());
                         card.appendChild(button);
                     }
-
                     container.appendChild(card);
                 }
             }
 
-            renderCategories(); // 初始渲染
+            renderCategories();
 
-            // ========== 自定义光标（逻辑不变） ==========
+            // 自定义光标
             let cursorX = 0, cursorY = 0;
             let cursorVisible = false;
             let rafId = null;
@@ -257,7 +275,6 @@
                 event.preventDefault();
             });
 
-            // 触摸设备支持
             document.addEventListener('touchmove', (event) => {
                 if (event.touches.length > 0) {
                     cursorX = event.touches[0].clientX;
@@ -280,13 +297,61 @@
                 }, 1500);
             });
 
-            // 初始光标居中
             cursorX = window.innerWidth / 2;
             cursorY = window.innerHeight / 2;
             customCursor.style.left = cursorX + 'px';
             customCursor.style.top = cursorY + 'px';
             customCursor.style.display = 'block';
             cursorVisible = true;
+        })();
+    </script>
+
+    <!-- 灵蝶增强动画：按钮点击涟漪效果（仅对安装了灵蝶的用户生效） -->
+    <script type="x-tm-inline">
+        (function() {
+            // 为每个按钮绑定涟漪动画
+            function addRippleEffect(button) {
+                button.addEventListener('click', function(e) {
+                    // 移除已有的涟漪元素
+                    const existingRipple = button.querySelector('.ripple-effect');
+                    if (existingRipple) existingRipple.remove();
+
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple-effect';
+
+                    const rect = button.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+
+                    button.appendChild(ripple);
+
+                    // 动画结束后自动移除
+                    ripple.addEventListener('animationend', function() {
+                        ripple.remove();
+                    });
+                });
+            }
+
+            // 等待 DOM 加载完成后给所有按钮绑定
+            function initRipple() {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(addRippleEffect);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initRipple);
+            } else {
+                initRipple();
+            }
+
+            // 隐藏灵蝶未安装提示（如果已安装）
+            const hint = document.getElementById('sw-install-hint');
+            if (hint) hint.style.display = 'none';
         })();
     </script>
 </body>
