@@ -96,7 +96,6 @@
             word-break: break-word;
             letter-spacing: 0.5px;
             position: relative;
-            overflow: hidden; /* 为涟漪效果准备 */
         }
 
         button:hover {
@@ -107,23 +106,6 @@
 
         button:active {
             transform: scale(0.97);
-        }
-
-        /* 涟漪元素样式（由灵蝶插入） */
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
         }
 
         .custom-cursor {
@@ -156,32 +138,18 @@
     <img src="https://github.com/wzmwayne/wzmwayne.github.io/raw/b461935d4929e87c5a28020e9b7d0295f5d9700c/gsb.png"
     alt="Custom Cursor" class="custom-cursor" id="customCursor">
 
-    <!-- 灵蝶未安装提示（普通 script 即可，所有浏览器执行） -->
-    <div id="sw-install-hint" style="position:fixed;bottom:20px;right:20px;background:#2c3e50;color:#ecf0f1;padding:10px 16px;border-radius:4px;font-size:14px;z-index:9999;display:none;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-        ⚡ 点击按钮有涟漪特效？<a href="https://github.com/wzmwayne/ScriptWeaver" target="_blank" style="color:#3b82f6;text-decoration:underline;">安装灵蝶</a> 解锁更多玩法
-    </div>
-    <script>
-        (function() {
-            if (!window.__ScriptWeaver__) {
-                document.getElementById('sw-install-hint').style.display = 'block';
-            }
-        })();
-    </script>
-
-    <!-- 核心功能（普通脚本，保证基础可用） -->
     <script>
         (function() {
             // ========== 嵌套字典：按类型分栏 ==========
             const categories = {
-                "安卓应用快速下载（仅提供链接，不承担责任）"： {
-                    "老豆荚旧版": "https://oldpods.mysxl.cn/old"
-                    "下载flclash": "https://pan.huang1111.cn/s/jR3KDuy"
+                "安卓应用快速下载（仅提供链接，不承担责任）": {
+                    "老豆荚旧版": "https://oldpods.mysxl.cn/old",
+                    "下载flclash": "https://pan.huang1111.cn/s/jR3KDuy",
                     "下载chrome旧版(edgeone)": "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/4.4.Chrome_80.0.3987.149.apk",
                     "下载chrome旧版(fastly)": "https://cdn.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/4.4.Chrome_80.0.3987.149.apk",
                     "下载mt管理器(官网)": "https://mt2.cn/download/",
                     "下载白名单管理器（即将开源）(fastly)": "https://cdn.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/whitelist.apk",
-                    "下载白名单管理器（即将开源）(edgeone)" "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/whitelist.apk"
-                    
+                    "下载白名单管理器（即将开源）(edgeone)": "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/whitelist.apk"
                 },
                 "下载项目资源": {
                     "下载 BetterSeewo": "https://wzmwayne.github.io/betterseewo/",
@@ -313,55 +281,6 @@
             customCursor.style.top = cursorY + 'px';
             customCursor.style.display = 'block';
             cursorVisible = true;
-        })();
-    </script>
-
-    <!-- 灵蝶增强动画：按钮点击涟漪效果（仅对安装了灵蝶的用户生效） -->
-    <script type="x-tm-inline">
-        (function() {
-            // 为每个按钮绑定涟漪动画
-            function addRippleEffect(button) {
-                button.addEventListener('click', function(e) {
-                    // 移除已有的涟漪元素
-                    const existingRipple = button.querySelector('.ripple-effect');
-                    if (existingRipple) existingRipple.remove();
-
-                    const ripple = document.createElement('span');
-                    ripple.className = 'ripple-effect';
-
-                    const rect = button.getBoundingClientRect();
-                    const size = Math.max(rect.width, rect.height);
-                    ripple.style.width = ripple.style.height = size + 'px';
-
-                    const x = e.clientX - rect.left - size / 2;
-                    const y = e.clientY - rect.top - size / 2;
-                    ripple.style.left = x + 'px';
-                    ripple.style.top = y + 'px';
-
-                    button.appendChild(ripple);
-
-                    // 动画结束后自动移除
-                    ripple.addEventListener('animationend', function() {
-                        ripple.remove();
-                    });
-                });
-            }
-
-            // 等待 DOM 加载完成后给所有按钮绑定
-            function initRipple() {
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach(addRippleEffect);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initRipple);
-            } else {
-                initRipple();
-            }
-
-            // 隐藏灵蝶未安装提示（如果已安装）
-            const hint = document.getElementById('sw-install-hint');
-            if (hint) hint.style.display = 'none';
         })();
     </script>
 </body>
