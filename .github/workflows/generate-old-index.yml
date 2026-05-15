@@ -1,0 +1,36 @@
+name: 从 index.html 字典自动生成 old/index.html
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 解析 index.html 并生成 old/index.html
+        run: python scripts/generate_old_index.py
+
+      - name: 如有变更则提交并推送
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add old/index.html
+          if ! git diff --staged --quiet; then
+            git commit -m "自动更新 old/index.html（同步 index.html 字典）[skip ci]"
+            git push
+          else
+            echo "无变更，跳过提交"
+          fi
