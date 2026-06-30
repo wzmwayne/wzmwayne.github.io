@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Proxy · 自定义并发测速</title>
+    <!-- 极简，无样式 -->
+</head>
+<body>
+    <h1>GitHub Proxy 节点测速（真实文件下载）</h1>
+    <p>
+        <strong>测试文件：</strong>
+        <input type="text" id="testFileUrl" size="70" 
+               value="https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat">
+    </p>
+    <p>
+        <strong>并发数：</strong>
+        <input type="number" id="concurrencyInput" value="5" min="0" style="width:60px;">
+        <span style="font-size:0.9em; color:#555;">（0 或空 = 不限制）</span>
+        <button onclick="startSpeedTest()">开始测速所有节点</button>
+        <span id="progressInfo"></span>
+    </p>
+    <p>
+        <strong>当前最快节点：</strong>
+        <select id="fastestNodeSelect" style="min-width:280px;"></select>
+        <button onclick="goProxy()">使用选中节点加速</button>
+        <span id="selectedNodeInfo"></span>
+    </p>
+    <hr>
+    <h2>全部节点测速结果（按速度排序）</h2>
+    <table border="1" cellpadding="5" style="border-collapse:collapse; width:100%;">
+        <thead>
+            <tr><th>排名</th><th>节点域名</th><th>类型</th><th>下载耗时 (ms)</th><th>速度 (KB/s)</th><th>状态</th></tr>
+        </thead>
+        <tbody id="nodeTableBody"></tbody>
+    </table>
+    <hr>
+    <footer><small>节点总数: <span id="nodeCount"></span> · 超时: 15s</small></footer>
+
+    <script>
+        // ================================================================
+        // 1. 完整节点列表（从原站提取，共67个）
+        // ================================================================
+        const NODES = [
+            { name: 'gh.llkk.cc', type: '默认' },
+            { name: 'github.tbedu.top', type: '贡献' },
+            { name: 'ghfile.geekertao.top', type: '贡献' },
+            { name: 'ghproxy.net', type: '贡献' },
+            { name: 'gh-proxy.com', type: '贡献' },
+            { name: 'gh-proxy.net', type: '贡献' },
+            { name: 'cdn.gh-proxy.com', type: '贡献' },
+            { name: 'github.dpik.top', type: '贡献' },
+            { name: 'j.1lin.dpdns.org', type: '贡献' },
+            { name: 'github.starrlzy.cn', type: '贡献' },
+            { name: 'github-proxy.memory-echoes.cn', type: '贡献' },
+            { name: 'git.yylx.win', type: '贡献' },
+            { name: 'ghm.078465.xyz', type: '贡献' },
+            { name: 'gh.927223.xyz', type: '贡献' },
+            { name: 'ghf.无名氏.top', type: '贡献' },
+            { name: 'gh.felicity.ac.cn', type: '贡献' },
+            { name: 'gh.bugdey.us.kg', type: '贡献' },
+            { name: 'cdn.akaere.online', type: '贡献' },
+            { name: 'gh.dpik.top', type: '贡献' },
+            { name: 'jiashu.1win.eu.org', type: '贡献' },
+            { name: 'tvv.tw', type: '贡献' },
+            { name: 'j.1win.ggff.net', type: '贡献' },
+            { name: 'gitproxy.127731.xyz', type: '贡献' },
+            { name: 'gh.inkchills.cn', type: '贡献' },
+            { name: 'gh.catmak.name', type: '贡献' },
+            { name: 'gh.b52m.cn', type: '贡献' },
+            { name: 'down.mxw.xx.kg', type: '贡献' },
+            { name: 'down.mxw.qzz.io', type: '贡献' },
+            { name: 'github.mxw.qzz.io', type: '贡献' },
+            { name: 'gh.acmsz.top', type: '贡献' },
+            { name: 'gh.jjj.gv.uy', type: '贡献' },
+            { name: 'githubdog.com', type: '贡献' },
+            { name: 'gh.meali.top', type: '贡献' },
+            { name: '777.z321.cc.cd', type: '贡献' },
+            { name: 'gg.z321.cc.cd', type: '贡献' },
+            { name: 'g.z321.cc.cd', type: '贡献' },
+            // ---------- 测绘 ----------
+            { name: 'slink.ltd', type: '测绘' },
+            { name: 'github.tmby.shop', type: '测绘' },
+            { name: 'ghpr.cc', type: '测绘' },
+            { name: 'gh.tryxd.cn', type: '测绘' },
+            { name: 'gitproxy.click', type: '测绘' },
+            { name: 'github.chenc.dev', type: '测绘' },
+            { name: 'gh.ddlc.top', type: '测绘' },
+            { name: 'gitproxy.mrhjx.cn', type: '测绘' },
+            { name: 'gh.sixyin.com', type: '测绘' },
+            { name: 'gh.monlor.com', type: '测绘' },
+            { name: 'ghpxy.hwinzniej.top', type: '测绘' },
+            { name: 'git.669966.xyz', type: '测绘' },
+            { name: 'ghfast.top', type: '测绘' },
+            { name: 'gh.jasonzeng.dev', type: '测绘' },
+            { name: 'github.geekery.cn', type: '测绘' },
+            { name: 'gp.zkitefly.eu.org', type: '测绘' },
+            { name: 'fastgit.cc', type: '测绘' },
+            { name: 'ghproxy.1888866.xyz', type: '测绘' },
+            { name: 'ghp.arslantu.xyz', type: '测绘' },
+            { name: 'github.ednovas.xyz', type: '测绘' },
+            { name: 'ghproxy.imciel.com', type: '测绘' },
+            { name: 'ghproxy.cxkpro.top', type: '测绘' },
+            { name: 'github.xxlab.tech', type: '测绘' },
+            { name: 'gh.idayer.com', type: '测绘' },
+            { name: 'free.cn.eu.org', type: '测绘' },
+            { name: 'gh.chjina.com', type: '测绘' },
+            { name: 'ghp.keleyaa.com', type: '测绘' },
+            { name: 'proxy.yaoyaoling.net', type: '测绘' },
+            { name: 'ghproxy.monkeyray.net', type: '测绘' },
+            { name: 'gh.noki.icu', type: '测绘' },
+            { name: 'g.blfrp.cn', type: '测绘' }
+        ];
+
+        // ================================================================
+        // 2. DOM 元素
+        // ================================================================
+        const tbody = document.getElementById('nodeTableBody');
+        const progressSpan = document.getElementById('progressInfo');
+        const nodeCountSpan = document.getElementById('nodeCount');
+        const fastestSelect = document.getElementById('fastestNodeSelect');
+        const selectedNodeInfo = document.getElementById('selectedNodeInfo');
+        nodeCountSpan.textContent = NODES.length;
+
+        let rowData = [];
+
+        // ================================================================
+        // 3. 渲染初始表格
+        // ================================================================
+        function renderInitialTable() {
+            tbody.innerHTML = '';
+            rowData = [];
+            NODES.forEach((node, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="rank">-</td>
+                    <td>${node.name}</td>
+                    <td>${node.type}</td>
+                    <td class="latency">-</td>
+                    <td class="speed">-</td>
+                    <td class="status">待测</td>
+                `;
+                tbody.appendChild(tr);
+                rowData.push({
+                    node,
+                    tr,
+                    rankTd: tr.querySelector('.rank'),
+                    latencyTd: tr.querySelector('.latency'),
+                    speedTd: tr.querySelector('.speed'),
+                    statusTd: tr.querySelector('.status')
+                });
+            });
+            fastestSelect.innerHTML = '<option value="">等待测速...</option>';
+            selectedNodeInfo.textContent = '';
+        }
+        renderInitialTable();
+
+        // ================================================================
+        // 4. 测速单个节点
+        // ================================================================
+        function testSingleNode(node, testFileUrl) {
+            return new Promise((resolve) => {
+                const proxyUrl = `https://${node.name}/${testFileUrl}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                const startTime = performance.now();
+
+                fetch(proxyUrl, {
+                    method: 'GET',
+                    signal: controller.signal,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.arrayBuffer().then(buffer => {
+                        const endTime = performance.now();
+                        const duration = endTime - startTime;
+                        const sizeBytes = buffer.byteLength;
+                        const sizeKB = sizeBytes / 1024;
+                        const speedKBps = (sizeKB / (duration / 1000));
+                        return { duration, sizeKB, speedKBps, success: true };
+                    });
+                })
+                .then(result => {
+                    clearTimeout(timeoutId);
+                    resolve({ node, success: true, ...result });
+                })
+                .catch(err => {
+                    clearTimeout(timeoutId);
+                    let errorMsg = err.message || '失败';
+                    if (err.name === 'AbortError') errorMsg = '超时';
+                    resolve({ node, success: false, error: errorMsg });
+                });
+            });
+        }
+
+        // ================================================================
+        // 5. 并发控制（支持用户自定义并发数）
+        // ================================================================
+        async function runWithConcurrency(tasks, concurrency) {
+            if (concurrency <= 0 || !isFinite(concurrency) || concurrency >= tasks.length) {
+                // 不限制：一次性全部发起
+                return Promise.all(tasks.map(t => t()));
+            } else {
+                // 限制并发
+                const results = [];
+                const executing = [];
+                for (const task of tasks) {
+                    const p = task().then(result => {
+                        executing.splice(executing.indexOf(p), 1);
+                        return result;
+                    });
+                    results.push(p);
+                    executing.push(p);
+                    if (executing.length >= concurrency) {
+                        await Promise.race(executing);
+                    }
+                }
+                return Promise.all(results);
+            }
+        }
+
+        // ================================================================
+        // 6. 主测速函数
+        // ================================================================
+        async function startSpeedTest() {
+            const testFileUrl = document.getElementById('testFileUrl').value.trim();
+            if (!testFileUrl) {
+                alert('请输入测试文件URL');
+                return;
+            }
+            try {
+                new URL(testFileUrl);
+            } catch {
+                alert('URL格式无效');
+                return;
+            }
+
+            // 读取并发数
+            const concurrencyInput = document.getElementById('concurrencyInput');
+            let concurrency = parseInt(concurrencyInput.value, 10);
+            if (isNaN(concurrency) || concurrency < 0) {
+                concurrency = 0; // 视为不限制
+            }
+            // 如果为0，则设置为 tasks.length（不限制）
+            if (concurrency === 0) {
+                concurrency = NODES.length; // 全部并发
+            }
+
+            // 重置状态
+            rowData.forEach(row => {
+                row.rankTd.textContent = '-';
+                row.latencyTd.textContent = '-';
+                row.speedTd.textContent = '-';
+                row.statusTd.textContent = '排队...';
+                row.statusTd.style.color = 'gray';
+            });
+            progressSpan.textContent = `测速开始 (并发=${concurrency === NODES.length ? '∞' : concurrency}) ...`;
+            fastestSelect.innerHTML = '<option value="">测速中...</option>';
+            selectedNodeInfo.textContent = '';
+
+            // 生成任务
+            const tasks = NODES.map((node) => {
+                return () => testSingleNode(node, testFileUrl);
+            });
+
+            const startAll = performance.now();
+            let completed = 0;
+            const results = [];
+
+            // 包装任务以更新进度
+            const wrappedTasks = tasks.map((task, index) => {
+                return async () => {
+                    const result = await task();
+                    completed++;
+                    progressSpan.textContent = `测速进行中 (${completed}/${NODES.length}) 并发=${concurrency === NODES.length ? '∞' : concurrency}`;
+                    const row = rowData[index];
+                    if (result.success) {
+                        row.latencyTd.textContent = Math.round(result.duration);
+                        row.speedTd.textContent = result.speedKBps.toFixed(2);
+                        row.statusTd.textContent = '成功';
+                        row.statusTd.style.color = 'green';
+                        results.push({
+                            node: result.node,
+                            duration: result.duration,
+                            speedKBps: result.speedKBps,
+                            success: true
+                        });
+                    } else {
+                        row.statusTd.textContent = result.error;
+                        row.statusTd.style.color = 'red';
+                        results.push({
+                            node: result.node,
+                            success: false,
+                            error: result.error
+                        });
+                    }
+                    return result;
+                };
+            });
+
+            await runWithConcurrency(wrappedTasks, concurrency);
+
+            const totalTime = ((performance.now() - startAll) / 1000).toFixed(1);
+            const successCount = results.filter(r => r.success).length;
+            progressSpan.textContent = `测速完成，总耗时 ${totalTime}s，成功 ${successCount}/${NODES.length}`;
+
+            // 排序：按速度降序
+            const successResults = results.filter(r => r.success);
+            successResults.sort((a, b) => b.speedKBps - a.speedKBps);
+
+            // 更新排名
+            const rankMap = new Map();
+            successResults.forEach((r, idx) => {
+                rankMap.set(r.node.name, idx + 1);
+            });
+            rowData.forEach(row => {
+                const rank = rankMap.get(row.node.name);
+                row.rankTd.textContent = rank || '失败';
+            });
+
+            // 填充下拉框
+            fastestSelect.innerHTML = '';
+            if (successResults.length === 0) {
+                fastestSelect.innerHTML = '<option value="">无可用节点</option>';
+                selectedNodeInfo.textContent = '所有节点不可用';
+                return;
+            }
+            successResults.forEach((r, idx) => {
+                const opt = document.createElement('option');
+                opt.value = r.node.name;
+                opt.textContent = `[${r.node.type}] ${r.node.name} (${r.speedKBps.toFixed(2)} KB/s)`;
+                if (idx === 0) opt.selected = true;
+                fastestSelect.appendChild(opt);
+            });
+            const fastest = successResults[0];
+            selectedNodeInfo.textContent = `✅ 当前最快: ${fastest.node.name} (${fastest.speedKBps.toFixed(2)} KB/s)`;
+        }
+
+        // ================================================================
+        // 7. 使用选中节点加速
+        // ================================================================
+        function goProxy() {
+            const targetUrl = prompt('请输入要加速的 GitHub 文件链接（默认使用测试文件）:', document.getElementById('testFileUrl').value);
+            if (!targetUrl) return;
+            const selectedNode = fastestSelect.value;
+            if (!selectedNode) {
+                alert('请先测速并选择一个节点');
+                return;
+            }
+            let finalUrl = targetUrl.trim();
+            if (!/^https?:\/\//i.test(finalUrl)) {
+                finalUrl = 'https://' + finalUrl;
+            }
+            const proxyUrl = `https://${selectedNode}/${finalUrl}`;
+            window.open(proxyUrl, '_blank');
+        }
+
+        // 控制台提示
+        console.log('自定义并发测速已加载，输入 0 即不限制并发。');
+    </script>
+</body>
+</html>
