@@ -118,10 +118,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 /* proxy widget */
 .proxy-widget{position:fixed;top:12px;right:12px;z-index:500;background:#fff;padding:6px 10px;font-size:.78rem;display:flex;align-items:center;gap:6px;border:1px solid #e0e0e0}
 .proxy-widget .proxy-label{color:#888;white-space:nowrap}
-.proxy-widget select{border:1px solid #d0d0d0;padding:2px 4px;font-size:.78rem;max-width:220px;color:#333;background:#fff}
+.proxy-widget select{border:1px solid #d0d0d0;padding:2px 4px;font-size:.78rem;min-width:160px;max-width:320px;color:#333;background:#fff}
 .proxy-widget select:focus{outline:1px solid var(--b8);border-color:var(--b8)}
 @media(max-width:899px){
   .proxy-widget{top:54px;right:8px}
+  .proxy-widget select{min-width:120px;max-width:200px}
 }
 
 /* print */
@@ -577,36 +578,68 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     if (e.target === celebration) celebration.classList.remove('open');
   });
 
-  // ---- proxy speed test ----
+  // ---- proxy speed test (ref: gh-proxy.html) ----
   var TEST_FILE_URL = 'https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/english_essay_template.jpg';
   var NODES = [
-    {name:'gh.llkk.cc',type:'\u9ed8\u8ba4'},{name:'github.tbedu.top',type:'\u8d21\u732e'},{name:'ghfile.geekertao.top',type:'\u8d21\u732e'},{name:'ghproxy.net',type:'\u8d21\u732e'},{name:'gh-proxy.com',type:'\u8d21\u732e'},{name:'gh-proxy.net',type:'\u8d21\u732e'},{name:'cdn.gh-proxy.com',type:'\u8d21\u732e'},{name:'github.dpik.top',type:'\u8d21\u732e'},{name:'j.1lin.dpdns.org',type:'\u8d21\u732e'},{name:'github.starrlzy.cn',type:'\u8d21\u732e'},{name:'github-proxy.memory-echoes.cn',type:'\u8d21\u732e'},{name:'git.yylx.win',type:'\u8d21\u732e'},{name:'ghm.078465.xyz',type:'\u8d21\u732e'},{name:'gh.927223.xyz',type:'\u8d21\u732e'},{name:'ghf.\u65e0\u540d\u6c0f.top',type:'\u8d21\u732e'},{name:'gh.felicity.ac.cn',type:'\u8d21\u732e'},{name:'gh.bugdey.us.kg',type:'\u8d21\u732e'},{name:'cdn.akaere.online',type:'\u8d21\u732e'},{name:'gh.dpik.top',type:'\u8d21\u732e'},{name:'jiashu.1win.eu.org',type:'\u8d21\u732e'},{name:'tvv.tw',type:'\u8d21\u732e'},{name:'j.1win.ggff.net',type:'\u8d21\u732e'},{name:'gitproxy.127731.xyz',type:'\u8d21\u732e'},{name:'gh.inkchills.cn',type:'\u8d21\u732e'},{name:'gh.catmak.name',type:'\u8d21\u732e'},{name:'gh.b52m.cn',type:'\u8d21\u732e'},{name:'down.mxw.xx.kg',type:'\u8d21\u732e'},{name:'down.mxw.qzz.io',type:'\u8d21\u732e'},{name:'github.mxw.qzz.io',type:'\u8d21\u732e'},{name:'gh.acmsz.top',type:'\u8d21\u732e'},{name:'gh.jjj.gv.uy',type:'\u8d21\u732e'},{name:'githubdog.com',type:'\u8d21\u732e'},{name:'gh.meali.top',type:'\u8d21\u732e'},{name:'777.z321.cc.cd',type:'\u8d21\u732e'},{name:'gg.z321.cc.cd',type:'\u8d21\u732e'},{name:'g.z321.cc.cd',type:'\u8d21\u732e'},{name:'slink.ltd',type:'\u6d4b\u7ed8'},{name:'github.tmby.shop',type:'\u6d4b\u7ed8'},{name:'ghpr.cc',type:'\u6d4b\u7ed8'},{name:'gh.tryxd.cn',type:'\u6d4b\u7ed8'},{name:'gitproxy.click',type:'\u6d4b\u7ed8'},{name:'github.chenc.dev',type:'\u6d4b\u7ed8'},{name:'gh.ddlc.top',type:'\u6d4b\u7ed8'},{name:'gitproxy.mrhjx.cn',type:'\u6d4b\u7ed8'},{name:'gh.sixyin.com',type:'\u6d4b\u7ed8'},{name:'gh.monlor.com',type:'\u6d4b\u7ed8'},{name:'ghpxy.hwinzniej.top',type:'\u6d4b\u7ed8'},{name:'git.669966.xyz',type:'\u6d4b\u7ed8'},{name:'ghfast.top',type:'\u6d4b\u7ed8'},{name:'gh.jasonzeng.dev',type:'\u6d4b\u7ed8'},{name:'github.geekery.cn',type:'\u6d4b\u7ed8'},{name:'gp.zkitefly.eu.org',type:'\u6d4b\u7ed8'},{name:'fastgit.cc',type:'\u6d4b\u7ed8'},{name:'ghproxy.1888866.xyz',type:'\u6d4b\u7ed8'},{name:'ghp.arslantu.xyz',type:'\u6d4b\u7ed8'},{name:'github.ednovas.xyz',type:'\u6d4b\u7ed8'},{name:'ghproxy.imciel.com',type:'\u6d4b\u7ed8'},{name:'ghproxy.cxkpro.top',type:'\u6d4b\u7ed8'},{name:'github.xxlab.tech',type:'\u6d4b\u7ed8'},{name:'gh.idayer.com',type:'\u6d4b\u7ed8'},{name:'free.cn.eu.org',type:'\u6d4b\u7ed8'},{name:'gh.chjina.com',type:'\u6d4b\u7ed8'},{name:'ghp.keleyaa.com',type:'\u6d4b\u7ed8'},{name:'proxy.yaoyaoling.net',type:'\u6d4b\u7ed8'},{name:'ghproxy.monkeyray.net',type:'\u6d4b\u7ed8'},{name:'gh.noki.icu',type:'\u6d4b\u7ed8'},{name:'g.blfrp.cn',type:'\u6d4b\u7ed8'}
+    { name: 'gh.llkk.cc', type: '\u9ed8\u8ba4' }, { name: 'github.tbedu.top', type: '\u8d21\u732e' }, { name: 'ghfile.geekertao.top', type: '\u8d21\u732e' }, { name: 'ghproxy.net', type: '\u8d21\u732e' }, { name: 'gh-proxy.com', type: '\u8d21\u732e' }, { name: 'gh-proxy.net', type: '\u8d21\u732e' }, { name: 'cdn.gh-proxy.com', type: '\u8d21\u732e' }, { name: 'github.dpik.top', type: '\u8d21\u732e' }, { name: 'j.1lin.dpdns.org', type: '\u8d21\u732e' }, { name: 'github.starrlzy.cn', type: '\u8d21\u732e' }, { name: 'github-proxy.memory-echoes.cn', type: '\u8d21\u732e' }, { name: 'git.yylx.win', type: '\u8d21\u732e' }, { name: 'ghm.078465.xyz', type: '\u8d21\u732e' }, { name: 'gh.927223.xyz', type: '\u8d21\u732e' }, { name: 'ghf.\u65e0\u540d\u6c0f.top', type: '\u8d21\u732e' }, { name: 'gh.felicity.ac.cn', type: '\u8d21\u732e' }, { name: 'gh.bugdey.us.kg', type: '\u8d21\u732e' }, { name: 'cdn.akaere.online', type: '\u8d21\u732e' }, { name: 'gh.dpik.top', type: '\u8d21\u732e' }, { name: 'jiashu.1win.eu.org', type: '\u8d21\u732e' }, { name: 'tvv.tw', type: '\u8d21\u732e' }, { name: 'j.1win.ggff.net', type: '\u8d21\u732e' }, { name: 'gitproxy.127731.xyz', type: '\u8d21\u732e' }, { name: 'gh.inkchills.cn', type: '\u8d21\u732e' }, { name: 'gh.catmak.name', type: '\u8d21\u732e' }, { name: 'gh.b52m.cn', type: '\u8d21\u732e' }, { name: 'down.mxw.xx.kg', type: '\u8d21\u732e' }, { name: 'down.mxw.qzz.io', type: '\u8d21\u732e' }, { name: 'github.mxw.qzz.io', type: '\u8d21\u732e' }, { name: 'gh.acmsz.top', type: '\u8d21\u732e' }, { name: 'gh.jjj.gv.uy', type: '\u8d21\u732e' }, { name: 'githubdog.com', type: '\u8d21\u732e' }, { name: 'gh.meali.top', type: '\u8d21\u732e' }, { name: '777.z321.cc.cd', type: '\u8d21\u732e' }, { name: 'gg.z321.cc.cd', type: '\u8d21\u732e' }, { name: 'g.z321.cc.cd', type: '\u8d21\u732e' }, { name: 'slink.ltd', type: '\u6d4b\u7ed8' }, { name: 'github.tmby.shop', type: '\u6d4b\u7ed8' }, { name: 'ghpr.cc', type: '\u6d4b\u7ed8' }, { name: 'gh.tryxd.cn', type: '\u6d4b\u7ed8' }, { name: 'gitproxy.click', type: '\u6d4b\u7ed8' }, { name: 'github.chenc.dev', type: '\u6d4b\u7ed8' }, { name: 'gh.ddlc.top', type: '\u6d4b\u7ed8' }, { name: 'gitproxy.mrhjx.cn', type: '\u6d4b\u7ed8' }, { name: 'gh.sixyin.com', type: '\u6d4b\u7ed8' }, { name: 'gh.monlor.com', type: '\u6d4b\u7ed8' }, { name: 'ghpxy.hwinzniej.top', type: '\u6d4b\u7ed8' }, { name: 'git.669966.xyz', type: '\u6d4b\u7ed8' }, { name: 'ghfast.top', type: '\u6d4b\u7ed8' }, { name: 'gh.jasonzeng.dev', type: '\u6d4b\u7ed8' }, { name: 'github.geekery.cn', type: '\u6d4b\u7ed8' }, { name: 'gp.zkitefly.eu.org', type: '\u6d4b\u7ed8' }, { name: 'fastgit.cc', type: '\u6d4b\u7ed8' }, { name: 'ghproxy.1888866.xyz', type: '\u6d4b\u7ed8' }, { name: 'ghp.arslantu.xyz', type: '\u6d4b\u7ed8' }, { name: 'github.ednovas.xyz', type: '\u6d4b\u7ed8' }, { name: 'ghproxy.imciel.com', type: '\u6d4b\u7ed8' }, { name: 'ghproxy.cxkpro.top', type: '\u6d4b\u7ed8' }, { name: 'github.xxlab.tech', type: '\u6d4b\u7ed8' }, { name: 'gh.idayer.com', type: '\u6d4b\u7ed8' }, { name: 'free.cn.eu.org', type: '\u6d4b\u7ed8' }, { name: 'gh.chjina.com', type: '\u6d4b\u7ed8' }, { name: 'ghp.keleyaa.com', type: '\u6d4b\u7ed8' }, { name: 'proxy.yaoyaoling.net', type: '\u6d4b\u7ed8' }, { name: 'ghproxy.monkeyray.net', type: '\u6d4b\u7ed8' }, { name: 'gh.noki.icu', type: '\u6d4b\u7ed8' }, { name: 'g.blfrp.cn', type: '\u6d4b\u7ed8' }
   ];
 
   var proxySelect = document.getElementById('proxySelect');
 
-  function testSingleNode(node, url) {
-    var proxyUrl = 'https://' + node.name + '/' + url;
-    var controller = new AbortController();
-    var tid = setTimeout(function() { controller.abort(); }, 15000);
-    var start = performance.now();
-    return fetch(proxyUrl, { method: 'GET', signal: controller.signal })
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.arrayBuffer();
-      })
-      .then(function(buf) {
-        clearTimeout(tid);
-        var end = performance.now();
-        var dur = end - start;
-        var speed = (buf.byteLength / 1024) / (dur / 1000);
-        return { node: node, success: true, duration: dur, speedKBps: speed };
-      })
-      .catch(function(err) {
-        clearTimeout(tid);
-        var msg = err.name === 'AbortError' ? '\u8d85\u65f6' : (err.message || '\u5931\u8d25');
-        return { node: node, success: false, error: msg };
-      });
+  function testSingleNode(node, testFileUrl) {
+    return new Promise(function(resolve) {
+      var proxyUrl = 'https://' + node.name + '/' + testFileUrl;
+      var controller = new AbortController();
+      var tid = setTimeout(function() { controller.abort(); }, 15000);
+      var start = performance.now();
+      fetch(proxyUrl, { method: 'GET', signal: controller.signal })
+        .then(function(response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.arrayBuffer();
+        })
+        .then(function(buffer) {
+          clearTimeout(tid);
+          var end = performance.now();
+          var duration = end - start;
+          var sizeKB = buffer.byteLength / 1024;
+          var speedKBps = sizeKB / (duration / 1000);
+          resolve({ node: node, success: true, duration: duration, speedKBps: speedKBps });
+        })
+        .catch(function(err) {
+          clearTimeout(tid);
+          var msg = err.name === 'AbortError' ? '\u8d85\u65f6' : (err.message || '\u5931\u8d25');
+          resolve({ node: node, success: false, error: msg });
+        });
+    });
+  }
+
+  function runAll(nodes, testUrl) {
+    return Promise.all(nodes.map(function(n) { return testSingleNode(n, testUrl); }));
+  }
+
+  function sortResults(results) {
+    var ok = results.filter(function(r) { return r.success; });
+    ok.sort(function(a, b) { return b.speedKBps - a.speedKBps; });
+    return ok;
+  }
+
+  function populateSelect(ok) {
+    proxySelect.innerHTML = '';
+    if (ok.length === 0) {
+      var o = document.createElement('option');
+      o.value = '';
+      o.textContent = '\u65e0\u53ef\u7528\u8282\u70b9';
+      proxySelect.appendChild(o);
+      return null;
+    }
+    ok.forEach(function(r) {
+      var o = document.createElement('option');
+      o.value = r.node.name;
+      o.textContent = '[' + r.node.type + '] ' + r.node.name + ' (' + (r.speedKBps | 0) + ' KB/s)';
+      proxySelect.appendChild(o);
+    });
+    proxySelect.options[0].selected = true;
+    return ok[0];
   }
 
   function applyProxy(nodeName) {
@@ -624,55 +657,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 
   proxySelect.addEventListener('change', function() {
     applyProxy(this.value);
-    try { localStorage.setItem('holiday2026_proxy', this.value); } catch(e) {}
+    try { localStorage.setItem('holiday2026_proxy', this.value); } catch (e) {}
   });
 
-  function appendNodeResult(result) {
-    var opt = document.createElement('option');
-    opt.value = result.node.name;
-    if (result.success) {
-      opt.textContent = '[' + result.node.type + '] ' + result.node.name + ' (' + (result.speedKBps|0) + ' KB/s)';
-    } else {
-      opt.textContent = '[' + result.node.type + '] ' + result.node.name + ' (' + (result.error || '\u5931\u8d25') + ')';
-      opt.disabled = true;
-    }
-    proxySelect.appendChild(opt);
-  }
-
-  function sortBySpeed() {
-    var opts = Array.prototype.slice.call(proxySelect.options);
-    opts.sort(function(a, b) {
-      if (a.disabled && !b.disabled) return 1;
-      if (!a.disabled && b.disabled) return -1;
-      if (a.disabled && b.disabled) return 0;
-      var sa = parseFloat(a.textContent.match(/\(([\d.]+) KB\/s\)/));
-      var sb = parseFloat(b.textContent.match(/\(([\d.]+) KB\/s\)/));
-      return (sb || 0) - (sa || 0);
-    });
-    opts.forEach(function(opt, idx) {
-      proxySelect.appendChild(opt);
-      if (idx === 0) opt.selected = true;
-    });
-  }
-
-  (async function(nodes, testUrl) {
+  (function(nodes, testUrl) {
     proxySelect.innerHTML = '<option value="">\u6d4b\u901f\u4e2d (' + nodes.length + '\u8282\u70b9)...</option>';
-    var cleared = false;
-    var tasks = nodes.map(function(n) {
-      return function() {
-        return testSingleNode(n, testUrl).then(function(result) {
-          if (!cleared) { proxySelect.innerHTML = ''; cleared = true; }
-          appendNodeResult(result);
-          return result;
-        });
-      };
+    runAll(nodes, testUrl).then(function(results) {
+      var ok = sortResults(results);
+      var fastest = populateSelect(ok);
+      if (fastest) applyProxy(fastest.node.name);
     });
-    var results = await Promise.all(tasks.map(function(t) { return t(); }));
-    sortBySpeed();
-    var fastest = proxySelect.options[0];
-    if (fastest && !fastest.disabled && fastest.value) {
-      applyProxy(fastest.value);
-    }
   })(NODES, TEST_FILE_URL);
 })();
 </script>
