@@ -7,252 +7,300 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5;color:#333;line-height:1.6;padding:16px;min-height:100vh}
-.container{max-width:800px;margin:0 auto}
-/* header */
-.header{text-align:center;padding:32px 16px 24px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:16px;color:#fff;margin-bottom:24px;box-shadow:0 4px 20px rgba(102,126,234,0.3)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#eef1f5;color:#333;line-height:1.6;padding:16px;min-height:100vh}
+
+.app-layout{max-width:1100px;margin:0 auto}
+@media(min-width:900px){
+  .app-layout{display:flex;gap:24px}
+  .sidebar{width:180px;flex-shrink:0;position:sticky;top:16px;align-self:flex-start}
+  .main-content{flex:1;min-width:0}
+}
+@media(max-width:899px){
+  .sidebar{display:none}
+}
+
+.sidebar{background:#fff;padding:12px 0}
+.sidebar-title{padding:8px 16px;font-size:.82rem;font-weight:600;color:#1565C0;letter-spacing:1px;border-bottom:1px solid #e8edf4;margin-bottom:4px}
+.sidebar-link{display:block;padding:8px 16px;font-size:.85rem;color:#444;text-decoration:none;transition:background .15s;border-left:3px solid transparent}
+.sidebar-link:hover{background:#e8edf4;border-left-color:#1565C0;color:#1565C0}
+
+.header{text-align:center;padding:32px 16px 24px;background:#1565C0;color:#fff;margin-bottom:20px}
 .header h1{font-size:1.6rem;font-weight:700;letter-spacing:1px}
-.header .subtitle{font-size:0.95rem;opacity:.85;margin-top:6px;letter-spacing:2px}
-/* global progress */
-.global-progress-wrap{background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.header .subtitle{font-size:.92rem;opacity:.8;margin-top:6px;letter-spacing:2px}
+
+.global-progress-wrap{background:#fff;padding:16px 20px;margin-bottom:20px}
 .global-progress-wrap .label{display:flex;justify-content:space-between;font-size:.9rem;font-weight:600;margin-bottom:8px;color:#555}
-.global-progress-track{height:12px;background:#e9ecef;border-radius:6px;overflow:hidden}
-.global-progress-fill{height:100%;width:0%;border-radius:6px;background:linear-gradient(90deg,#4facfe 0%,#00f2fe 100%);transition:width .35s ease}
-/* subject cards */
-.subject-card{background:#fff;border-radius:14px;padding:0;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden}
-.subject-card .subject-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:1px}
-.subject-card .subject-header .sub-progress{font-size:.8rem;font-weight:400;opacity:.9}
-.subject-card .task-list{padding:8px 0}
-.task-item{display:flex;align-items:flex-start;gap:12px;padding:12px 20px;border-bottom:1px solid #f0f0f0;transition:background .15s}
+.global-progress-track{height:10px;background:#e9ecef;overflow:hidden}
+.global-progress-fill{height:100%;width:0%;background:#1976D2;transition:width .35s ease}
+
+.subject-card{background:#fff;margin-bottom:12px;overflow:hidden}
+.subject-card .subject-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;font-size:1rem;font-weight:700;color:#fff;letter-spacing:1px;cursor:pointer;user-select:none}
+.subject-card .subject-header .subj-left{display:flex;align-items:center;gap:8px}
+.subject-card .subject-header .sub-progress{font-size:.78rem;font-weight:400;opacity:.9}
+.collapse-indicator{font-size:.78rem;opacity:.8;transition:transform .2s}
+.collapse-indicator.collapsed{transform:rotate(-90deg)}
+.subject-card .task-list{padding:6px 0}
+.subject-card.collapsed .task-list{display:none}
+
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:10px 20px;border-bottom:1px solid #f0f0f0}
 .task-item:last-child{border-bottom:none}
-.task-item:hover{background:#fafbfc}
-/* custom checkbox */
-.task-checkbox{position:relative;flex-shrink:0;width:22px;height:22px;margin-top:2px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.task-checkbox{position:relative;flex-shrink:0;width:20px;height:20px;margin-top:2px;cursor:pointer}
 .task-checkbox input{position:absolute;opacity:0;cursor:pointer;width:0;height:0}
-.checkmark{position:absolute;top:0;left:0;width:22px;height:22px;border:2px solid #c0c4cc;border-radius:5px;background:#fff;transition:all .2s}
-.task-checkbox input:checked+.checkmark{background:#4facfe;border-color:#4facfe}
-.checkmark::after{content:"";position:absolute;display:none;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.checkmark{position:absolute;top:0;left:0;width:20px;height:20px;border:2px solid #c0c4cc;background:#fff}
+.task-checkbox input:checked+.checkmark{background:#1976D2;border-color:#1976D2}
+.checkmark::after{content:"";position:absolute;display:none;left:6px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .task-checkbox input:checked+.checkmark::after{display:block}
 .task-text{flex:1;font-size:.9rem;color:#444;word-break:break-word}
 .task-text.done{text-decoration:line-through;color:#aaa}
-.task-text a{color:#4a90d9;text-decoration:none;word-break:break-all}
+.task-text a{color:#1565C0;text-decoration:none;word-break:break-all}
 .task-text a:hover{text-decoration:underline}
-.task-download-link{flex-shrink:0;margin-left:4px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:#e8f0fe;color:#4a90d9;font-size:.85rem;text-decoration:none;transition:background .2s}
-.task-download-link:hover{background:#d0e2fc}
-/* subject bg colors */
-.subj-yuwen .subject-header{background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%)}
-.subj-shuxue .subject-header{background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%)}
-.subj-yingyu .subject-header{background:linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)}
-.subj-wuli .subject-header{background:linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)}
-.subj-daofa .subject-header{background:linear-gradient(135deg,#fccb90 0%,#d57eeb 100%)}
-.subj-lishi .subject-header{background:linear-gradient(135deg,#5ee7df 0%,#b490ca 100%)}
-.subj-yuwen{--bg:#fff5f7}
-.subj-shuxue{--bg:#f0f8ff}
-.subj-yingyu{--bg:#f0fdf4}
-.subj-wuli{--bg:#faf5ff}
-.subj-daofa{--bg:#fff7ed}
-.subj-lishi{--bg:#f0fdfa}
-/* attachments */
-.attachments-section{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.attachments-section h2{font-size:1.1rem;color:#555;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.attachments-section h2 span{font-size:1.2rem}
-.attachment-list{display:flex;flex-direction:column;gap:8px}
-.attachment-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;transition:background .2s;text-decoration:none;color:#333;font-size:.88rem}
-.attachment-item:hover{background:#e8f0fe}
-.attachment-item .file-icon{font-size:1.1rem;flex-shrink:0}
+
+.subj-yuwen .subject-header{background:#1565C0}
+.subj-shuxue .subject-header{background:#1976D2}
+.subj-yingyu .subject-header{background:#1E88E5}
+.subj-wuli .subject-header{background:#2196F3}
+.subj-daofa .subject-header{background:#42A5F5}
+.subj-lishi .subject-header{background:#64B5F6}
+
+.attachments-section{background:#fff;padding:20px;margin-bottom:12px}
+.attachments-section h2{font-size:1rem;color:#1565C0;margin-bottom:14px;letter-spacing:1px}
+.attachment-list{display:flex;flex-direction:column;gap:6px}
+.attachment-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f8f9fa;text-decoration:none;color:#333;font-size:.85rem}
+.attachment-item:hover{background:#e3edf7}
+.attachment-item .file-type{flex-shrink:0;font-size:.7rem;font-weight:600;color:#1565C0;background:#e3edf7;padding:2px 6px}
 .attachment-item .file-name{flex:1;word-break:break-all}
-.attachment-item .file-size{font-size:.78rem;color:#999;flex-shrink:0}
-/* footer */
+.attachment-item .file-size{font-size:.76rem;color:#999;flex-shrink:0}
+
 .footer{text-align:center;padding:20px 16px;color:#888;font-size:.82rem;line-height:1.8}
-.footer a{color:#4a90d9;text-decoration:none}
+.footer a{color:#1565C0;text-decoration:none}
 .footer a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="container" id="app">
-  <div class="header">
-    <h1>2026年八升九暑假作业清单</h1>
-    <div class="subtitle">核对无误，逐项完成</div>
-  </div>
 
-  <div class="global-progress-wrap">
-    <div class="label">
-      <span>总进度</span>
-      <span id="globalPercent">0%</span>
-    </div>
-    <div class="global-progress-track">
-      <div class="global-progress-fill" id="globalFill"></div>
-    </div>
-  </div>
+<div class="app-layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main-content">
 
-  <!-- 语文 -->
-  <div class="subject-card subj-yuwen">
-    <div class="subject-header">
-      <span>📖 语文</span>
-      <span class="sub-progress" id="subProgress-yuwen">已完成 0/3</span>
+    <div class="header">
+      <h1>2026年八升九暑假作业清单</h1>
+      <div class="subtitle">核对无误，逐项完成</div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-1"><span class="checkmark"></span></span>
-        <span class="task-text">购买人民文学出版社《水浒传》《简爱》，每本各写两篇感悟、人物分析</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-2"><span class="checkmark"></span></span>
-        <span class="task-text">购买《作文素材》杂志（版本不限），积累议论文人物素材2个</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-3"><span class="checkmark"></span></span>
-        <span class="task-text">看视频《闪亮的名字》</span>
-      </label>
-    </div>
-  </div>
 
-  <!-- 数学 -->
-  <div class="subject-card subj-shuxue">
-    <div class="subject-header">
-      <span>📐 数学</span>
-      <span class="sub-progress" id="subProgress-shuxue">已完成 0/2</span>
+    <div class="global-progress-wrap">
+      <div class="label">
+        <span>总进度</span>
+        <span id="globalPercent">0%</span>
+      </div>
+      <div class="global-progress-track">
+        <div class="global-progress-fill" id="globalFill"></div>
+      </div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="shuxue-1"><span class="checkmark"></span></span>
-        <span class="task-text">九上书本p1-28练习题（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/math_grade9_vol1.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="shuxue-2"><span class="checkmark"></span></span>
-        <span class="task-text">网课链接（1-2单元）：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcf80-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a></span>
-      </label>
-    </div>
-  </div>
 
-  <!-- 英语 -->
-  <div class="subject-card subj-yingyu">
-    <div class="subject-header">
-      <span>📝 英语</span>
-      <span class="sub-progress" id="subProgress-yingyu">已完成 0/3</span>
+    <div id="subj-yuwen" class="subject-card subj-yuwen">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 语文</span>
+        <span class="sub-progress" id="subProgress-yuwen">0/3</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yuwen-1"><span class="checkmark"></span></span>
+          <span class="task-text">购买人民文学出版社《水浒传》《简爱》，每本各写两篇感悟、人物分析</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yuwen-2"><span class="checkmark"></span></span>
+          <span class="task-text">购买《作文素材》杂志（版本不限），积累议论文人物素材2个</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yuwen-3"><span class="checkmark"></span></span>
+          <span class="task-text">看视频《闪亮的名字》</span>
+        </label>
+      </div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-1"><span class="checkmark"></span></span>
-        <span class="task-text">读一本英语书籍，写bookreport（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/english_essay_template.jpg" target="_blank" rel="noopener">下载模板</a>）</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-2"><span class="checkmark"></span></span>
-        <span class="task-text">语篇练习*5（完型5+阅读15+综填5），自行选用八下至九上难度题目</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-3"><span class="checkmark"></span></span>
-        <span class="task-text">智慧教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7495dc-0772-11ed-ac74-092ab92074e6%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44" target="_blank" rel="noopener">basic.smartedu.cn</a>），摘抄笔记，默写单词表（见课本）</span>
-      </label>
-    </div>
-  </div>
 
-  <!-- 物理 -->
-  <div class="subject-card subj-wuli">
-    <div class="subject-header">
-      <span>⚡ 物理</span>
-      <span class="sub-progress" id="subProgress-wuli">已完成 0/3</span>
+    <div id="subj-shuxue" class="subject-card subj-shuxue">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 数学</span>
+        <span class="sub-progress" id="subProgress-shuxue">0/2</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="shuxue-1"><span class="checkmark"></span></span>
+          <span class="task-text">九上书本p1-28练习题（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/math_grade9_vol1.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="shuxue-2"><span class="checkmark"></span></span>
+          <span class="task-text">网课链接（1-2单元）：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcf80-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a></span>
+        </label>
+      </div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="wuli-1"><span class="checkmark"></span></span>
-        <span class="task-text">课本预习13-17单元至欧姆定律（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/physics_textbook.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="wuli-2"><span class="checkmark"></span></span>
-        <span class="task-text">教育平台预习电流电路（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcfee-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44%2F5136342961" target="_blank" rel="noopener">basic.smartedu.cn</a>）</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="wuli-3"><span class="checkmark"></span></span>
-        <span class="task-text">科技小制作或家庭用电调查二选一，格式规范详见班级群</span>
-      </label>
-    </div>
-  </div>
 
-  <!-- 道法 -->
-  <div class="subject-card subj-daofa">
-    <div class="subject-header">
-      <span>📜 道法</span>
-      <span class="sub-progress" id="subProgress-daofa">已完成 0/2</span>
+    <div id="subj-yingyu" class="subject-card subj-yingyu">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 英语</span>
+        <span class="sub-progress" id="subProgress-yingyu">0/3</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yingyu-1"><span class="checkmark"></span></span>
+          <span class="task-text">读一本英语书籍，写bookreport（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/english_essay_template.jpg" target="_blank" rel="noopener">下载模板</a>）</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yingyu-2"><span class="checkmark"></span></span>
+          <span class="task-text">语篇练习*5（完型5+阅读15+综填5），自行选用八下至九上难度题目</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="yingyu-3"><span class="checkmark"></span></span>
+          <span class="task-text">智慧教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7495dc-0772-11ed-ac74-092ab92074e6%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44" target="_blank" rel="noopener">basic.smartedu.cn</a>），摘抄笔记，默写单词表（见课本）</span>
+        </label>
+      </div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="daofa-1"><span class="checkmark"></span></span>
-        <span class="task-text">抄八下6-14课核心知识点</span>
-      </label>
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="daofa-2"><span class="checkmark"></span></span>
-        <span class="task-text">预习九上1-2单元</span>
-      </label>
-    </div>
-  </div>
 
-  <!-- 历史 -->
-  <div class="subject-card subj-lishi">
-    <div class="subject-header">
-      <span>🏛️ 历史</span>
-      <span class="sub-progress" id="subProgress-lishi">已完成 0/1</span>
+    <div id="subj-wuli" class="subject-card subj-wuli">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 物理</span>
+        <span class="sub-progress" id="subProgress-wuli">0/3</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="wuli-1"><span class="checkmark"></span></span>
+          <span class="task-text">课本预习13-17单元至欧姆定律（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/physics_textbook.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="wuli-2"><span class="checkmark"></span></span>
+          <span class="task-text">教育平台预习电流电路（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcfee-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44%2F5136342961" target="_blank" rel="noopener">basic.smartedu.cn</a>）</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="wuli-3"><span class="checkmark"></span></span>
+          <span class="task-text">科技小制作或家庭用电调查二选一，格式规范详见班级群</span>
+        </label>
+      </div>
     </div>
-    <div class="task-list">
-      <label class="task-item">
-        <span class="task-checkbox"><input type="checkbox" data-key="lishi-1"><span class="checkmark"></span></span>
-        <span class="task-text">九上前四个单元教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7481aa-0772-11ed-ac74-092ab92074e6%2F44bee8bc-54e6-11ed-9c34-850ba61fa9f4%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a>），做书上练习</span>
-      </label>
+
+    <div id="subj-daofa" class="subject-card subj-daofa">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 道法</span>
+        <span class="sub-progress" id="subProgress-daofa">0/2</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="daofa-1"><span class="checkmark"></span></span>
+          <span class="task-text">抄八下6-14课核心知识点</span>
+        </label>
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="daofa-2"><span class="checkmark"></span></span>
+          <span class="task-text">预习九上1-2单元</span>
+        </label>
+      </div>
     </div>
-  </div>
 
-  <!-- 附件区 -->
-  <div class="attachments-section" id="attachments">
-    <h2><span>📎</span> 附件下载</h2>
-    <div class="attachment-list" id="attachmentList"></div>
-  </div>
+    <div id="subj-lishi" class="subject-card subj-lishi">
+      <div class="subject-header">
+        <span class="subj-left"><span class="collapse-indicator">-</span> 历史</span>
+        <span class="sub-progress" id="subProgress-lishi">0/1</span>
+      </div>
+      <div class="task-list">
+        <label class="task-item">
+          <span class="task-checkbox"><input type="checkbox" data-key="lishi-1"><span class="checkmark"></span></span>
+          <span class="task-text">九上前四个单元教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7481aa-0772-11ed-ac74-092ab92074e6%2F44bee8bc-54e6-11ed-9c34-850ba61fa9f4%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a>），做书上练习</span>
+        </label>
+      </div>
+    </div>
 
-  <!-- 页脚 -->
-  <div class="footer">
-    <div>最后更新：2026年6月29日</div>
-    <div>如有疑问，请咨询班级群或老师</div>
-    <div>教育平台需自行注册登录，物理格式见班级群，英语语篇自选，<a href="#attachments">files文件夹</a>内包含相关模板和电子版（点击上方附件区下载）。</div>
-  </div>
+    <div class="attachments-section" id="attachments">
+      <h2>附件下载</h2>
+      <div class="attachment-list" id="attachmentList"></div>
+    </div>
+
+    <div class="footer">
+      <div>最后更新：2026年6月29日</div>
+      <div>如有疑问，请咨询班级群或老师</div>
+      <div>教育平台需自行注册登录，物理格式见班级群，英语语篇自选，<a href="#attachments">files文件夹</a>内包含相关模板和电子版（点击上方附件区下载）。</div>
+    </div>
+
+  </main>
 </div>
 
 <script>
 (function() {
   var files = [
-    { name: 'math_grade9_vol1.pdf', size: 'PDF' },
-    { name: 'english_grade9_vol1.pdf', size: 'PDF' },
-    { name: 'physics_textbook.pdf', size: 'PDF' },
-    { name: 'english_essay_template.jpg', size: 'JPG' }
+    { name: 'math_grade9_vol1.pdf', ext: 'PDF' },
+    { name: 'english_grade9_vol1.pdf', ext: 'PDF' },
+    { name: 'physics_textbook.pdf', ext: 'PDF' },
+    { name: 'english_essay_template.jpg', ext: 'JPG' }
   ];
 
-  // render attachment list
-  var listEl = document.getElementById('attachmentList');
   var rawBase = 'https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/';
+
+  // --- sidebar ---
+  var sidebarNav = document.getElementById('sidebar');
+  var subjMeta = [
+    { id: 'yuwen', name: '语文' },
+    { id: 'shuxue', name: '数学' },
+    { id: 'yingyu', name: '英语' },
+    { id: 'wuli', name: '物理' },
+    { id: 'daofa', name: '道法' },
+    { id: 'lishi', name: '历史' }
+  ];
+  var sideTitle = document.createElement('div');
+  sideTitle.className = 'sidebar-title';
+  sideTitle.textContent = '目 录';
+  sidebarNav.appendChild(sideTitle);
+  subjMeta.forEach(function(s) {
+    var a = document.createElement('a');
+    a.className = 'sidebar-link';
+    a.href = '#subj-' + s.id;
+    a.textContent = s.name;
+    sidebarNav.appendChild(a);
+  });
+
+  // --- attachments ---
+  var listEl = document.getElementById('attachmentList');
   files.forEach(function(f) {
     var a = document.createElement('a');
     a.className = 'attachment-item';
     a.href = rawBase + encodeURI(f.name);
     a.target = '_blank';
     a.rel = 'noopener';
-    var icon = document.createElement('span');
-    icon.className = 'file-icon';
-    var ext = f.name.split('.').pop().toLowerCase();
-    if (ext === 'pdf') icon.textContent = '📄';
-    else if (ext === 'jpg' || ext === 'jpeg') icon.textContent = '🖼️';
-    else if (ext === 'docx' || ext === 'doc') icon.textContent = '📝';
-    else icon.textContent = '📎';
+    var typeSpan = document.createElement('span');
+    typeSpan.className = 'file-type';
+    typeSpan.textContent = f.ext;
     var nameSpan = document.createElement('span');
     nameSpan.className = 'file-name';
     nameSpan.textContent = f.name;
-    var sizeSpan = document.createElement('span');
-    sizeSpan.className = 'file-size';
-    sizeSpan.textContent = f.size;
-    a.appendChild(icon);
+    a.appendChild(typeSpan);
     a.appendChild(nameSpan);
-    a.appendChild(sizeSpan);
     listEl.appendChild(a);
   });
 
-  // task management
+  // --- collapse ---
+  var collapseKey = 'holiday2026_collapse';
+  var collapseState = {};
+  try { collapseState = JSON.parse(localStorage.getItem(collapseKey) || '{}'); } catch(e) {}
+
+  var subjectCards = document.querySelectorAll('.subject-card');
+  subjectCards.forEach(function(card) {
+    var header = card.querySelector('.subject-header');
+    var indicator = header.querySelector('.collapse-indicator');
+    var subjId = card.id.replace('subj-', '');
+
+    // apply saved state
+    if (collapseState[subjId] === false) {
+      card.classList.add('collapsed');
+      indicator.textContent = '+';
+      indicator.classList.add('collapsed');
+    }
+
+    header.addEventListener('click', function() {
+      var isCollapsed = card.classList.toggle('collapsed');
+      indicator.textContent = isCollapsed ? '+' : '-';
+      indicator.classList.toggle('collapsed', isCollapsed);
+      collapseState[subjId] = !isCollapsed;
+      try { localStorage.setItem(collapseKey, JSON.stringify(collapseState)); } catch(e) {}
+    });
+  });
+
+  // --- checkbox progress ---
   var subjects = [
     { id: 'yuwen', total: 3, checkboxes: [] },
     { id: 'shuxue', total: 2, checkboxes: [] },
@@ -284,7 +332,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     try { localStorage.setItem('holiday2026', JSON.stringify(state)); } catch(e) {}
   }
 
-  // populate subject checkbox arrays
   subjects.forEach(function(subj) {
     subj.checkboxes = Array.prototype.filter.call(allCheckboxes, function(cb) {
       return cb.getAttribute('data-key').indexOf(subj.id + '-') === 0;
@@ -300,21 +347,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
       totalDone += done;
       totalAll += subj.total;
       var subProg = document.getElementById('subProgress-' + subj.id);
-      if (subProg) subProg.textContent = '\u5df2\u5b8c\u6210 ' + done + '/' + subj.total;
+      if (subProg) subProg.textContent = done + '/' + subj.total;
     });
     var pct = totalAll === 0 ? 0 : Math.round(totalDone / totalAll * 100);
     globalFill.style.width = pct + '%';
     globalPercent.textContent = pct + '%';
   }
 
-  // event listeners
   allCheckboxes.forEach(function(cb) {
     cb.addEventListener('change', function() {
       saveState();
       updateProgress();
-    });
-    // toggle strikethrough on task text
-    cb.addEventListener('change', function() {
       var label = this.closest('.task-item');
       if (label) {
         var textEl = label.querySelector('.task-text');
@@ -323,9 +366,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     });
   });
 
-  // initial load
   loadState();
-  // apply strikethrough to already-checked items
   allCheckboxes.forEach(function(cb) {
     if (cb.checked) {
       var label = cb.closest('.task-item');
