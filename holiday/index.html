@@ -1,365 +1,342 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Proxy · 自定义并发测速</title>
-    <!-- 极简，无样式 -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年八升九暑假作业清单</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5;color:#333;line-height:1.6;padding:16px;min-height:100vh}
+.container{max-width:800px;margin:0 auto}
+/* header */
+.header{text-align:center;padding:32px 16px 24px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:16px;color:#fff;margin-bottom:24px;box-shadow:0 4px 20px rgba(102,126,234,0.3)}
+.header h1{font-size:1.6rem;font-weight:700;letter-spacing:1px}
+.header .subtitle{font-size:0.95rem;opacity:.85;margin-top:6px;letter-spacing:2px}
+/* global progress */
+.global-progress-wrap{background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.global-progress-wrap .label{display:flex;justify-content:space-between;font-size:.9rem;font-weight:600;margin-bottom:8px;color:#555}
+.global-progress-track{height:12px;background:#e9ecef;border-radius:6px;overflow:hidden}
+.global-progress-fill{height:100%;width:0%;border-radius:6px;background:linear-gradient(90deg,#4facfe 0%,#00f2fe 100%);transition:width .35s ease}
+/* subject cards */
+.subject-card{background:#fff;border-radius:14px;padding:0;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden}
+.subject-card .subject-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:1px}
+.subject-card .subject-header .sub-progress{font-size:.8rem;font-weight:400;opacity:.9}
+.subject-card .task-list{padding:8px 0}
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:12px 20px;border-bottom:1px solid #f0f0f0;transition:background .15s}
+.task-item:last-child{border-bottom:none}
+.task-item:hover{background:#fafbfc}
+/* custom checkbox */
+.task-checkbox{position:relative;flex-shrink:0;width:22px;height:22px;margin-top:2px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.task-checkbox input{position:absolute;opacity:0;cursor:pointer;width:0;height:0}
+.checkmark{position:absolute;top:0;left:0;width:22px;height:22px;border:2px solid #c0c4cc;border-radius:5px;background:#fff;transition:all .2s}
+.task-checkbox input:checked+.checkmark{background:#4facfe;border-color:#4facfe}
+.checkmark::after{content:"";position:absolute;display:none;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.task-checkbox input:checked+.checkmark::after{display:block}
+.task-text{flex:1;font-size:.9rem;color:#444;word-break:break-word}
+.task-text.done{text-decoration:line-through;color:#aaa}
+.task-text a{color:#4a90d9;text-decoration:none;word-break:break-all}
+.task-text a:hover{text-decoration:underline}
+.task-download-link{flex-shrink:0;margin-left:4px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:#e8f0fe;color:#4a90d9;font-size:.85rem;text-decoration:none;transition:background .2s}
+.task-download-link:hover{background:#d0e2fc}
+/* subject bg colors */
+.subj-yuwen .subject-header{background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%)}
+.subj-shuxue .subject-header{background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%)}
+.subj-yingyu .subject-header{background:linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)}
+.subj-wuli .subject-header{background:linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)}
+.subj-daofa .subject-header{background:linear-gradient(135deg,#fccb90 0%,#d57eeb 100%)}
+.subj-lishi .subject-header{background:linear-gradient(135deg,#5ee7df 0%,#b490ca 100%)}
+.subj-yuwen{--bg:#fff5f7}
+.subj-shuxue{--bg:#f0f8ff}
+.subj-yingyu{--bg:#f0fdf4}
+.subj-wuli{--bg:#faf5ff}
+.subj-daofa{--bg:#fff7ed}
+.subj-lishi{--bg:#f0fdfa}
+/* attachments */
+.attachments-section{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.attachments-section h2{font-size:1.1rem;color:#555;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.attachments-section h2 span{font-size:1.2rem}
+.attachment-list{display:flex;flex-direction:column;gap:8px}
+.attachment-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;transition:background .2s;text-decoration:none;color:#333;font-size:.88rem}
+.attachment-item:hover{background:#e8f0fe}
+.attachment-item .file-icon{font-size:1.1rem;flex-shrink:0}
+.attachment-item .file-name{flex:1;word-break:break-all}
+.attachment-item .file-size{font-size:.78rem;color:#999;flex-shrink:0}
+/* footer */
+.footer{text-align:center;padding:20px 16px;color:#888;font-size:.82rem;line-height:1.8}
+.footer a{color:#4a90d9;text-decoration:none}
+.footer a:hover{text-decoration:underline}
+</style>
 </head>
 <body>
-    <h1>GitHub Proxy 节点测速（真实文件下载）</h1>
-    <p>
-        <strong>测试文件：</strong>
-        <input type="text" id="testFileUrl" size="70" 
-               value="https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat">
-    </p>
-    <p>
-        <strong>并发数：</strong>
-        <input type="number" id="concurrencyInput" value="5" min="0" style="width:60px;">
-        <span style="font-size:0.9em; color:#555;">（0 或空 = 不限制）</span>
-        <button onclick="startSpeedTest()">开始测速所有节点</button>
-        <span id="progressInfo"></span>
-    </p>
-    <p>
-        <strong>当前最快节点：</strong>
-        <select id="fastestNodeSelect" style="min-width:280px;"></select>
-        <button onclick="goProxy()">使用选中节点加速</button>
-        <span id="selectedNodeInfo"></span>
-    </p>
-    <hr>
-    <h2>全部节点测速结果（按速度排序）</h2>
-    <table border="1" cellpadding="5" style="border-collapse:collapse; width:100%;">
-        <thead>
-            <tr><th>排名</th><th>节点域名</th><th>类型</th><th>下载耗时 (ms)</th><th>速度 (KB/s)</th><th>状态</th></tr>
-        </thead>
-        <tbody id="nodeTableBody"></tbody>
-    </table>
-    <hr>
-    <footer><small>节点总数: <span id="nodeCount"></span> · 超时: 15s</small></footer>
+<div class="container" id="app">
+  <div class="header">
+    <h1>2026年八升九暑假作业清单</h1>
+    <div class="subtitle">核对无误，逐项完成</div>
+  </div>
 
-    <script>
-        // ================================================================
-        // 1. 完整节点列表（从原站提取，共67个）
-        // ================================================================
-        const NODES = [
-            { name: 'gh.llkk.cc', type: '默认' },
-            { name: 'github.tbedu.top', type: '贡献' },
-            { name: 'ghfile.geekertao.top', type: '贡献' },
-            { name: 'ghproxy.net', type: '贡献' },
-            { name: 'gh-proxy.com', type: '贡献' },
-            { name: 'gh-proxy.net', type: '贡献' },
-            { name: 'cdn.gh-proxy.com', type: '贡献' },
-            { name: 'github.dpik.top', type: '贡献' },
-            { name: 'j.1lin.dpdns.org', type: '贡献' },
-            { name: 'github.starrlzy.cn', type: '贡献' },
-            { name: 'github-proxy.memory-echoes.cn', type: '贡献' },
-            { name: 'git.yylx.win', type: '贡献' },
-            { name: 'ghm.078465.xyz', type: '贡献' },
-            { name: 'gh.927223.xyz', type: '贡献' },
-            { name: 'ghf.无名氏.top', type: '贡献' },
-            { name: 'gh.felicity.ac.cn', type: '贡献' },
-            { name: 'gh.bugdey.us.kg', type: '贡献' },
-            { name: 'cdn.akaere.online', type: '贡献' },
-            { name: 'gh.dpik.top', type: '贡献' },
-            { name: 'jiashu.1win.eu.org', type: '贡献' },
-            { name: 'tvv.tw', type: '贡献' },
-            { name: 'j.1win.ggff.net', type: '贡献' },
-            { name: 'gitproxy.127731.xyz', type: '贡献' },
-            { name: 'gh.inkchills.cn', type: '贡献' },
-            { name: 'gh.catmak.name', type: '贡献' },
-            { name: 'gh.b52m.cn', type: '贡献' },
-            { name: 'down.mxw.xx.kg', type: '贡献' },
-            { name: 'down.mxw.qzz.io', type: '贡献' },
-            { name: 'github.mxw.qzz.io', type: '贡献' },
-            { name: 'gh.acmsz.top', type: '贡献' },
-            { name: 'gh.jjj.gv.uy', type: '贡献' },
-            { name: 'githubdog.com', type: '贡献' },
-            { name: 'gh.meali.top', type: '贡献' },
-            { name: '777.z321.cc.cd', type: '贡献' },
-            { name: 'gg.z321.cc.cd', type: '贡献' },
-            { name: 'g.z321.cc.cd', type: '贡献' },
-            // ---------- 测绘 ----------
-            { name: 'slink.ltd', type: '测绘' },
-            { name: 'github.tmby.shop', type: '测绘' },
-            { name: 'ghpr.cc', type: '测绘' },
-            { name: 'gh.tryxd.cn', type: '测绘' },
-            { name: 'gitproxy.click', type: '测绘' },
-            { name: 'github.chenc.dev', type: '测绘' },
-            { name: 'gh.ddlc.top', type: '测绘' },
-            { name: 'gitproxy.mrhjx.cn', type: '测绘' },
-            { name: 'gh.sixyin.com', type: '测绘' },
-            { name: 'gh.monlor.com', type: '测绘' },
-            { name: 'ghpxy.hwinzniej.top', type: '测绘' },
-            { name: 'git.669966.xyz', type: '测绘' },
-            { name: 'ghfast.top', type: '测绘' },
-            { name: 'gh.jasonzeng.dev', type: '测绘' },
-            { name: 'github.geekery.cn', type: '测绘' },
-            { name: 'gp.zkitefly.eu.org', type: '测绘' },
-            { name: 'fastgit.cc', type: '测绘' },
-            { name: 'ghproxy.1888866.xyz', type: '测绘' },
-            { name: 'ghp.arslantu.xyz', type: '测绘' },
-            { name: 'github.ednovas.xyz', type: '测绘' },
-            { name: 'ghproxy.imciel.com', type: '测绘' },
-            { name: 'ghproxy.cxkpro.top', type: '测绘' },
-            { name: 'github.xxlab.tech', type: '测绘' },
-            { name: 'gh.idayer.com', type: '测绘' },
-            { name: 'free.cn.eu.org', type: '测绘' },
-            { name: 'gh.chjina.com', type: '测绘' },
-            { name: 'ghp.keleyaa.com', type: '测绘' },
-            { name: 'proxy.yaoyaoling.net', type: '测绘' },
-            { name: 'ghproxy.monkeyray.net', type: '测绘' },
-            { name: 'gh.noki.icu', type: '测绘' },
-            { name: 'g.blfrp.cn', type: '测绘' }
-        ];
+  <div class="global-progress-wrap">
+    <div class="label">
+      <span>总进度</span>
+      <span id="globalPercent">0%</span>
+    </div>
+    <div class="global-progress-track">
+      <div class="global-progress-fill" id="globalFill"></div>
+    </div>
+  </div>
 
-        // ================================================================
-        // 2. DOM 元素
-        // ================================================================
-        const tbody = document.getElementById('nodeTableBody');
-        const progressSpan = document.getElementById('progressInfo');
-        const nodeCountSpan = document.getElementById('nodeCount');
-        const fastestSelect = document.getElementById('fastestNodeSelect');
-        const selectedNodeInfo = document.getElementById('selectedNodeInfo');
-        nodeCountSpan.textContent = NODES.length;
+  <!-- 语文 -->
+  <div class="subject-card subj-yuwen">
+    <div class="subject-header">
+      <span>📖 语文</span>
+      <span class="sub-progress" id="subProgress-yuwen">已完成 0/3</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-1"><span class="checkmark"></span></span>
+        <span class="task-text">购买人民文学出版社《水浒传》《简爱》，每本各写两篇感悟、人物分析</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-2"><span class="checkmark"></span></span>
+        <span class="task-text">购买《作文素材》杂志（版本不限），积累议论文人物素材2个</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yuwen-3"><span class="checkmark"></span></span>
+        <span class="task-text">看视频《闪亮的名字》</span>
+      </label>
+    </div>
+  </div>
 
-        let rowData = [];
+  <!-- 数学 -->
+  <div class="subject-card subj-shuxue">
+    <div class="subject-header">
+      <span>📐 数学</span>
+      <span class="sub-progress" id="subProgress-shuxue">已完成 0/2</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="shuxue-1"><span class="checkmark"></span></span>
+        <span class="task-text">九上书本p1-28练习题（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/math_grade9_vol1.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="shuxue-2"><span class="checkmark"></span></span>
+        <span class="task-text">网课链接（1-2单元）：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcf80-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a></span>
+      </label>
+    </div>
+  </div>
 
-        // ================================================================
-        // 3. 渲染初始表格
-        // ================================================================
-        function renderInitialTable() {
-            tbody.innerHTML = '';
-            rowData = [];
-            NODES.forEach((node, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="rank">-</td>
-                    <td>${node.name}</td>
-                    <td>${node.type}</td>
-                    <td class="latency">-</td>
-                    <td class="speed">-</td>
-                    <td class="status">待测</td>
-                `;
-                tbody.appendChild(tr);
-                rowData.push({
-                    node,
-                    tr,
-                    rankTd: tr.querySelector('.rank'),
-                    latencyTd: tr.querySelector('.latency'),
-                    speedTd: tr.querySelector('.speed'),
-                    statusTd: tr.querySelector('.status')
-                });
-            });
-            fastestSelect.innerHTML = '<option value="">等待测速...</option>';
-            selectedNodeInfo.textContent = '';
-        }
-        renderInitialTable();
+  <!-- 英语 -->
+  <div class="subject-card subj-yingyu">
+    <div class="subject-header">
+      <span>📝 英语</span>
+      <span class="sub-progress" id="subProgress-yingyu">已完成 0/3</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-1"><span class="checkmark"></span></span>
+        <span class="task-text">读一本英语书籍，写bookreport（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/english_essay_template.jpg" target="_blank" rel="noopener">下载模板</a>）</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-2"><span class="checkmark"></span></span>
+        <span class="task-text">语篇练习*5（完型5+阅读15+综填5），自行选用八下至九上难度题目</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="yingyu-3"><span class="checkmark"></span></span>
+        <span class="task-text">智慧教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7495dc-0772-11ed-ac74-092ab92074e6%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44" target="_blank" rel="noopener">basic.smartedu.cn</a>），摘抄笔记，默写单词表（见课本）</span>
+      </label>
+    </div>
+  </div>
 
-        // ================================================================
-        // 4. 测速单个节点
-        // ================================================================
-        function testSingleNode(node, testFileUrl) {
-            return new Promise((resolve) => {
-                const proxyUrl = `https://${node.name}/${testFileUrl}`;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+  <!-- 物理 -->
+  <div class="subject-card subj-wuli">
+    <div class="subject-header">
+      <span>⚡ 物理</span>
+      <span class="sub-progress" id="subProgress-wuli">已完成 0/3</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="wuli-1"><span class="checkmark"></span></span>
+        <span class="task-text">课本预习13-17单元至欧姆定律（<a href="https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/physics_textbook.pdf" target="_blank" rel="noopener">下载电子版</a>）</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="wuli-2"><span class="checkmark"></span></span>
+        <span class="task-text">教育平台预习电流电路（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2Fe7bbcfee-0590-11ed-9c79-92fc3b3249d5%2Fff8080814371757b01437c363a187b0a%2F8ae7e58b77b3bac901783dd80dee0c44%2F5136342961" target="_blank" rel="noopener">basic.smartedu.cn</a>）</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="wuli-3"><span class="checkmark"></span></span>
+        <span class="task-text">科技小制作或家庭用电调查二选一，格式规范详见班级群</span>
+      </label>
+    </div>
+  </div>
 
-                const startTime = performance.now();
+  <!-- 道法 -->
+  <div class="subject-card subj-daofa">
+    <div class="subject-header">
+      <span>📜 道法</span>
+      <span class="sub-progress" id="subProgress-daofa">已完成 0/2</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="daofa-1"><span class="checkmark"></span></span>
+        <span class="task-text">抄八下6-14课核心知识点</span>
+      </label>
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="daofa-2"><span class="checkmark"></span></span>
+        <span class="task-text">预习九上1-2单元</span>
+      </label>
+    </div>
+  </div>
 
-                fetch(proxyUrl, {
-                    method: 'GET',
-                    signal: controller.signal,
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return response.arrayBuffer().then(buffer => {
-                        const endTime = performance.now();
-                        const duration = endTime - startTime;
-                        const sizeBytes = buffer.byteLength;
-                        const sizeKB = sizeBytes / 1024;
-                        const speedKBps = (sizeKB / (duration / 1000));
-                        return { duration, sizeKB, speedKBps, success: true };
-                    });
-                })
-                .then(result => {
-                    clearTimeout(timeoutId);
-                    resolve({ node, success: true, ...result });
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    let errorMsg = err.message || '失败';
-                    if (err.name === 'AbortError') errorMsg = '超时';
-                    resolve({ node, success: false, error: errorMsg });
-                });
-            });
-        }
+  <!-- 历史 -->
+  <div class="subject-card subj-lishi">
+    <div class="subject-header">
+      <span>🏛️ 历史</span>
+      <span class="sub-progress" id="subProgress-lishi">已完成 0/1</span>
+    </div>
+    <div class="task-list">
+      <label class="task-item">
+        <span class="task-checkbox"><input type="checkbox" data-key="lishi-1"><span class="checkmark"></span></span>
+        <span class="task-text">九上前四个单元教育平台预习（链接：<a href="https://basic.smartedu.cn/syncClassroom?defaultTag=e7bbce2c-0590-11ed-9c79-92fc3b3249d5%2F44bec0c6-54e6-11ed-9c34-850ba61fa9f4%2F6a7481aa-0772-11ed-ac74-092ab92074e6%2F44bee8bc-54e6-11ed-9c34-850ba61fa9f4%2Fff8080814371757b014390f883db0453" target="_blank" rel="noopener">basic.smartedu.cn</a>），做书上练习</span>
+      </label>
+    </div>
+  </div>
 
-        // ================================================================
-        // 5. 并发控制（支持用户自定义并发数）
-        // ================================================================
-        async function runWithConcurrency(tasks, concurrency) {
-            if (concurrency <= 0 || !isFinite(concurrency) || concurrency >= tasks.length) {
-                // 不限制：一次性全部发起
-                return Promise.all(tasks.map(t => t()));
-            } else {
-                // 限制并发
-                const results = [];
-                const executing = [];
-                for (const task of tasks) {
-                    const p = task().then(result => {
-                        executing.splice(executing.indexOf(p), 1);
-                        return result;
-                    });
-                    results.push(p);
-                    executing.push(p);
-                    if (executing.length >= concurrency) {
-                        await Promise.race(executing);
-                    }
-                }
-                return Promise.all(results);
-            }
-        }
+  <!-- 附件区 -->
+  <div class="attachments-section" id="attachments">
+    <h2><span>📎</span> 附件下载</h2>
+    <div class="attachment-list" id="attachmentList"></div>
+  </div>
 
-        // ================================================================
-        // 6. 主测速函数
-        // ================================================================
-        async function startSpeedTest() {
-            const testFileUrl = document.getElementById('testFileUrl').value.trim();
-            if (!testFileUrl) {
-                alert('请输入测试文件URL');
-                return;
-            }
-            try {
-                new URL(testFileUrl);
-            } catch {
-                alert('URL格式无效');
-                return;
-            }
+  <!-- 页脚 -->
+  <div class="footer">
+    <div>最后更新：2026年6月29日</div>
+    <div>如有疑问，请咨询班级群或老师</div>
+    <div>教育平台需自行注册登录，物理格式见班级群，英语语篇自选，<a href="#attachments">files文件夹</a>内包含相关模板和电子版（点击上方附件区下载）。</div>
+  </div>
+</div>
 
-            // 读取并发数
-            const concurrencyInput = document.getElementById('concurrencyInput');
-            let concurrency = parseInt(concurrencyInput.value, 10);
-            if (isNaN(concurrency) || concurrency < 0) {
-                concurrency = 0; // 视为不限制
-            }
-            // 如果为0，则设置为 tasks.length（不限制）
-            if (concurrency === 0) {
-                concurrency = NODES.length; // 全部并发
-            }
+<script>
+(function() {
+  var files = [
+    { name: 'math_grade9_vol1.pdf', size: 'PDF' },
+    { name: 'english_grade9_vol1.pdf', size: 'PDF' },
+    { name: 'physics_textbook.pdf', size: 'PDF' },
+    { name: 'english_essay_template.jpg', size: 'JPG' }
+  ];
 
-            // 重置状态
-            rowData.forEach(row => {
-                row.rankTd.textContent = '-';
-                row.latencyTd.textContent = '-';
-                row.speedTd.textContent = '-';
-                row.statusTd.textContent = '排队...';
-                row.statusTd.style.color = 'gray';
-            });
-            progressSpan.textContent = `测速开始 (并发=${concurrency === NODES.length ? '∞' : concurrency}) ...`;
-            fastestSelect.innerHTML = '<option value="">测速中...</option>';
-            selectedNodeInfo.textContent = '';
+  // render attachment list
+  var listEl = document.getElementById('attachmentList');
+  var rawBase = 'https://raw.githubusercontent.com/wzmwayne/wzmwayne.github.io/refs/heads/main/holiday/files/';
+  files.forEach(function(f) {
+    var a = document.createElement('a');
+    a.className = 'attachment-item';
+    a.href = rawBase + encodeURI(f.name);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    var icon = document.createElement('span');
+    icon.className = 'file-icon';
+    var ext = f.name.split('.').pop().toLowerCase();
+    if (ext === 'pdf') icon.textContent = '📄';
+    else if (ext === 'jpg' || ext === 'jpeg') icon.textContent = '🖼️';
+    else if (ext === 'docx' || ext === 'doc') icon.textContent = '📝';
+    else icon.textContent = '📎';
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'file-name';
+    nameSpan.textContent = f.name;
+    var sizeSpan = document.createElement('span');
+    sizeSpan.className = 'file-size';
+    sizeSpan.textContent = f.size;
+    a.appendChild(icon);
+    a.appendChild(nameSpan);
+    a.appendChild(sizeSpan);
+    listEl.appendChild(a);
+  });
 
-            // 生成任务
-            const tasks = NODES.map((node) => {
-                return () => testSingleNode(node, testFileUrl);
-            });
+  // task management
+  var subjects = [
+    { id: 'yuwen', total: 3, checkboxes: [] },
+    { id: 'shuxue', total: 2, checkboxes: [] },
+    { id: 'yingyu', total: 3, checkboxes: [] },
+    { id: 'wuli', total: 3, checkboxes: [] },
+    { id: 'daofa', total: 2, checkboxes: [] },
+    { id: 'lishi', total: 1, checkboxes: [] }
+  ];
 
-            const startAll = performance.now();
-            let completed = 0;
-            const results = [];
+  var allCheckboxes = document.querySelectorAll('.task-checkbox input[type="checkbox"]');
+  var globalFill = document.getElementById('globalFill');
+  var globalPercent = document.getElementById('globalPercent');
 
-            // 包装任务以更新进度
-            const wrappedTasks = tasks.map((task, index) => {
-                return async () => {
-                    const result = await task();
-                    completed++;
-                    progressSpan.textContent = `测速进行中 (${completed}/${NODES.length}) 并发=${concurrency === NODES.length ? '∞' : concurrency}`;
-                    const row = rowData[index];
-                    if (result.success) {
-                        row.latencyTd.textContent = Math.round(result.duration);
-                        row.speedTd.textContent = result.speedKBps.toFixed(2);
-                        row.statusTd.textContent = '成功';
-                        row.statusTd.style.color = 'green';
-                        results.push({
-                            node: result.node,
-                            duration: result.duration,
-                            speedKBps: result.speedKBps,
-                            success: true
-                        });
-                    } else {
-                        row.statusTd.textContent = result.error;
-                        row.statusTd.style.color = 'red';
-                        results.push({
-                            node: result.node,
-                            success: false,
-                            error: result.error
-                        });
-                    }
-                    return result;
-                };
-            });
+  function loadState() {
+    try {
+      var saved = JSON.parse(localStorage.getItem('holiday2026') || '{}');
+      allCheckboxes.forEach(function(cb) {
+        var key = cb.getAttribute('data-key');
+        if (saved[key]) cb.checked = true;
+      });
+    } catch(e) {}
+  }
 
-            await runWithConcurrency(wrappedTasks, concurrency);
+  function saveState() {
+    var state = {};
+    allCheckboxes.forEach(function(cb) {
+      state[cb.getAttribute('data-key')] = cb.checked;
+    });
+    try { localStorage.setItem('holiday2026', JSON.stringify(state)); } catch(e) {}
+  }
 
-            const totalTime = ((performance.now() - startAll) / 1000).toFixed(1);
-            const successCount = results.filter(r => r.success).length;
-            progressSpan.textContent = `测速完成，总耗时 ${totalTime}s，成功 ${successCount}/${NODES.length}`;
+  // populate subject checkbox arrays
+  subjects.forEach(function(subj) {
+    subj.checkboxes = Array.prototype.filter.call(allCheckboxes, function(cb) {
+      return cb.getAttribute('data-key').indexOf(subj.id + '-') === 0;
+    });
+  });
 
-            // 排序：按速度降序
-            const successResults = results.filter(r => r.success);
-            successResults.sort((a, b) => b.speedKBps - a.speedKBps);
+  function updateProgress() {
+    var totalDone = 0;
+    var totalAll = 0;
+    subjects.forEach(function(subj) {
+      var done = 0;
+      subj.checkboxes.forEach(function(cb) { if (cb.checked) done++; });
+      totalDone += done;
+      totalAll += subj.total;
+      var subProg = document.getElementById('subProgress-' + subj.id);
+      if (subProg) subProg.textContent = '\u5df2\u5b8c\u6210 ' + done + '/' + subj.total;
+    });
+    var pct = totalAll === 0 ? 0 : Math.round(totalDone / totalAll * 100);
+    globalFill.style.width = pct + '%';
+    globalPercent.textContent = pct + '%';
+  }
 
-            // 更新排名
-            const rankMap = new Map();
-            successResults.forEach((r, idx) => {
-                rankMap.set(r.node.name, idx + 1);
-            });
-            rowData.forEach(row => {
-                const rank = rankMap.get(row.node.name);
-                row.rankTd.textContent = rank || '失败';
-            });
+  // event listeners
+  allCheckboxes.forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      saveState();
+      updateProgress();
+    });
+    // toggle strikethrough on task text
+    cb.addEventListener('change', function() {
+      var label = this.closest('.task-item');
+      if (label) {
+        var textEl = label.querySelector('.task-text');
+        if (textEl) textEl.classList.toggle('done', this.checked);
+      }
+    });
+  });
 
-            // 填充下拉框
-            fastestSelect.innerHTML = '';
-            if (successResults.length === 0) {
-                fastestSelect.innerHTML = '<option value="">无可用节点</option>';
-                selectedNodeInfo.textContent = '所有节点不可用';
-                return;
-            }
-            successResults.forEach((r, idx) => {
-                const opt = document.createElement('option');
-                opt.value = r.node.name;
-                opt.textContent = `[${r.node.type}] ${r.node.name} (${r.speedKBps.toFixed(2)} KB/s)`;
-                if (idx === 0) opt.selected = true;
-                fastestSelect.appendChild(opt);
-            });
-            const fastest = successResults[0];
-            selectedNodeInfo.textContent = `✅ 当前最快: ${fastest.node.name} (${fastest.speedKBps.toFixed(2)} KB/s)`;
-        }
-
-        // ================================================================
-        // 7. 使用选中节点加速
-        // ================================================================
-        function goProxy() {
-            const targetUrl = prompt('请输入要加速的 GitHub 文件链接（默认使用测试文件）:', document.getElementById('testFileUrl').value);
-            if (!targetUrl) return;
-            const selectedNode = fastestSelect.value;
-            if (!selectedNode) {
-                alert('请先测速并选择一个节点');
-                return;
-            }
-            let finalUrl = targetUrl.trim();
-            if (!/^https?:\/\//i.test(finalUrl)) {
-                finalUrl = 'https://' + finalUrl;
-            }
-            const proxyUrl = `https://${selectedNode}/${finalUrl}`;
-            window.open(proxyUrl, '_blank');
-        }
-
-        // 控制台提示
-        console.log('自定义并发测速已加载，输入 0 即不限制并发。');
-    </script>
+  // initial load
+  loadState();
+  // apply strikethrough to already-checked items
+  allCheckboxes.forEach(function(cb) {
+    if (cb.checked) {
+      var label = cb.closest('.task-item');
+      if (label) {
+        var textEl = label.querySelector('.task-text');
+        if (textEl) textEl.classList.add('done');
+      }
+    }
+  });
+  updateProgress();
+})();
+</script>
 </body>
 </html>
