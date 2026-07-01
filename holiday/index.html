@@ -120,6 +120,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .proxy-widget .proxy-label{color:#888;white-space:nowrap}
 .proxy-widget select{border:1px solid #d0d0d0;padding:2px 4px;font-size:.78rem;min-width:160px;max-width:320px;color:#333;background:#fff}
 .proxy-widget select:focus{outline:1px solid var(--b8);border-color:var(--b8)}
+.proxy-widget .retest-btn{border:1px solid #d0d0d0;background:#fff;padding:2px 6px;font-size:.72rem;color:#666;cursor:pointer;white-space:nowrap}
+.proxy-widget .retest-btn:hover{border-color:var(--b5);color:var(--b8);background:var(--bg)}
 @media(max-width:899px){
   .proxy-widget{top:54px;right:8px}
   .proxy-widget select{min-width:120px;max-width:200px}
@@ -154,6 +156,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="proxy-widget" id="proxyWidget">
   <span class="proxy-label">加速</span>
   <select class="proxy-select" id="proxySelect"><option value="">测速中...</option></select>
+  <button class="retest-btn" id="retestBtn">重新测速</button>
 </div>
 
 <div class="mobile-header" id="mobileHeader">
@@ -585,6 +588,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
   ];
 
   var proxySelect = document.getElementById('proxySelect');
+  var retestBtn = document.getElementById('retestBtn');
+  var CACHE_KEY = 'holiday2026_proxy_results';
 
   function testSingleNode(node, testFileUrl) {
     return new Promise(function(resolve) {
@@ -620,26 +625,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
   function sortResults(results) {
     var ok = results.filter(function(r) { return r.success; });
     ok.sort(function(a, b) { return b.speedKBps - a.speedKBps; });
-    return ok;
+    return ok.map(function(r) {
+      return { name: r.node.name, type: r.node.type, speedKBps: r.speedKBps };
+    });
   }
 
-  function populateSelect(ok) {
+  function populateSelect(list) {
     proxySelect.innerHTML = '';
-    if (ok.length === 0) {
+    if (!list || list.length === 0) {
       var o = document.createElement('option');
       o.value = '';
       o.textContent = '\u65e0\u53ef\u7528\u8282\u70b9';
       proxySelect.appendChild(o);
       return null;
     }
-    ok.forEach(function(r) {
+    list.forEach(function(item) {
       var o = document.createElement('option');
-      o.value = r.node.name;
-      o.textContent = '[' + r.node.type + '] ' + r.node.name + ' (' + (r.speedKBps | 0) + ' KB/s)';
+      o.value = item.name;
+      o.textContent = '[' + item.type + '] ' + item.name + ' (' + (item.speedKBps | 0) + ' KB/s)';
       proxySelect.appendChild(o);
     });
     proxySelect.options[0].selected = true;
-    return ok[0];
+    return list[0];
   }
 
   function applyProxy(nodeName) {
@@ -660,14 +667,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     try { localStorage.setItem('holiday2026_proxy', this.value); } catch (e) {}
   });
 
-  (function(nodes, testUrl) {
-    proxySelect.innerHTML = '<option value="">\u6d4b\u901f\u4e2d (' + nodes.length + '\u8282\u70b9)...</option>';
-    runAll(nodes, testUrl).then(function(results) {
+  function startTest() {
+    proxySelect.innerHTML = '<option value="">\u6d4b\u901f\u4e2d (' + NODES.length + '\u8282\u70b9)...</option>';
+    retestBtn.disabled = true;
+    runAll(NODES, TEST_FILE_URL).then(function(results) {
       var ok = sortResults(results);
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(ok)); } catch (e) {}
       var fastest = populateSelect(ok);
-      if (fastest) applyProxy(fastest.node.name);
+      if (fastest) applyProxy(fastest.name);
+      retestBtn.disabled = false;
     });
-  })(NODES, TEST_FILE_URL);
+  }
+
+  var cached = null;
+  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
+  if (cached && cached.length > 0) {
+    var fastest = populateSelect(cached);
+    if (fastest) applyProxy(fastest.name);
+  } else {
+    startTest();
+  }
+
+  retestBtn.addEventListener('click', function() {
+    try { localStorage.removeItem(CACHE_KEY); } catch (e) {}
+    startTest();
+  });
 })();
 </script>
 </body>
