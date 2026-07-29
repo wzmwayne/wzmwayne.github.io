@@ -1,45 +1,360 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitHub Proxy · 自定义并发测速</title>
-    <!-- 极简，无样式 -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            max-width: 1280px;
+            margin: 24px auto;
+            padding: 0 20px 40px;
+            line-height: 1.6;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .subtitle {
+            color: #475569;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-top: -4px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            border: 1px solid #e9edf4;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 18px;
+        }
+        .flex-row label {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid #d0d8e3;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+            transition: 0.15s;
+            font-family: inherit;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        input[type="text"] {
+            flex: 1 1 320px;
+            min-width: 200px;
+        }
+        input[type="number"] {
+            width: 72px;
+        }
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #eef2f6;
+            color: #1e293b;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: #1e293b;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #0f172a;
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-success {
+            background: #0b8a5c;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #087049;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d0d8e3;
+        }
+        .btn-outline:hover {
+            background: #f1f4f9;
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
+        .info-badge {
+            font-size: 0.9rem;
+            color: #475569;
+            background: #f1f4f9;
+            padding: 2px 14px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .status-dot.success {
+            background: #16a34a;
+        }
+        .status-dot.fail {
+            background: #dc2626;
+        }
+        .status-dot.pending {
+            background: #f59e0b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        th {
+            background: #f1f4f9;
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #dce2ec;
+        }
+        td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #e9edf4;
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: #fafbfc;
+        }
+        .rank-num {
+            font-weight: 600;
+            color: #475569;
+        }
+        .rank-1 {
+            color: #16a34a;
+        }
+        .node-name {
+            font-weight: 500;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88rem;
+        }
+        .type-tag {
+            font-size: 0.75rem;
+            background: #e9edf4;
+            padding: 2px 10px;
+            border-radius: 20px;
+            color: #475569;
+            display: inline-block;
+        }
+        .status-text {
+            font-weight: 500;
+        }
+        .status-text.success {
+            color: #16a34a;
+        }
+        .status-text.fail {
+            color: #dc2626;
+        }
+        .status-text.pending {
+            color: #f59e0b;
+        }
+        .speed-value {
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+        .footer {
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 0.85rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .selected-display {
+            background: #f1f5f9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        select {
+            padding: 7px 14px;
+            border: 1px solid #d0d8e3;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            background: #fff;
+            min-width: 240px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        select:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+        .progress-bar-bg {
+            height: 4px;
+            background: #e9edf4;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #3b82f6;
+            border-radius: 4px;
+            transition: width 0.25s ease;
+        }
+        .clear-btn {
+            color: #94a3b8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline dotted;
+            padding: 0 4px;
+        }
+        .clear-btn:hover {
+            color: #dc2626;
+        }
+        @media (max-width: 640px) {
+            .card {
+                padding: 16px;
+            }
+            .flex-row {
+                gap: 8px;
+            }
+            input[type="text"] {
+                flex: 1 1 100%;
+                min-width: 0;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th,
+            td {
+                padding: 6px 8px;
+            }
+            select {
+                min-width: 140px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>GitHub Proxy 节点测速（真实文件下载）</h1>
-    <p>
-        <strong>测试文件：</strong>
-        <input type="text" id="testFileUrl" size="70" 
-               value="https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat">
-    </p>
-    <p>
-        <strong>并发数：</strong>
-        <input type="number" id="concurrencyInput" value="5" min="0" style="width:60px;">
-        <span style="font-size:0.9em; color:#555;">（0 或空 = 不限制）</span>
-        <button onclick="startSpeedTest()">开始测速所有节点</button>
-        <span id="progressInfo"></span>
-    </p>
-    <p>
-        <strong>当前最快节点：</strong>
-        <select id="fastestNodeSelect" style="min-width:280px;"></select>
-        <button onclick="goProxy()">使用选中节点加速</button>
-        <span id="selectedNodeInfo"></span>
-    </p>
-    <hr>
-    <h2>全部节点测速结果（按速度排序）</h2>
-    <table border="1" cellpadding="5" style="border-collapse:collapse; width:100%;">
-        <thead>
-            <tr><th>排名</th><th>节点域名</th><th>类型</th><th>下载耗时 (ms)</th><th>速度 (KB/s)</th><th>状态</th></tr>
-        </thead>
-        <tbody id="nodeTableBody"></tbody>
-    </table>
-    <hr>
-    <footer><small>节点总数: <span id="nodeCount"></span> · 超时: 15s</small></footer>
+
+    <h1>
+        <span>📡 GitHub Proxy 节点测速</span>
+        <span class="info-badge" id="lastTestBadge">⏳ 尚未测速</span>
+    </h1>
+    <p class="subtitle">真实文件下载测速 · 并发可控 · 结果自动保存 · 点击开始自动读取剪贴板链接</p>
+
+    <!-- ===== 控制栏 ===== -->
+    <div class="card">
+        <div class="flex-row" style="margin-bottom:10px;">
+            <label for="testFileUrl">测试文件</label>
+            <input type="text" id="testFileUrl"
+            value="https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat" />
+        </div>
+        <div class="flex-row" style="flex-wrap:wrap; gap:10px 18px;">
+            <div class="flex-row" style="gap:6px;">
+                <label for="concurrencyInput">并发</label>
+                <input type="number" id="concurrencyInput" value="5" min="0" style="width:68px;" />
+                <span style="font-size:0.85rem;color:#64748b;">（0=不限）</span>
+            </div>
+            <button class="btn btn-primary" id="startBtn" onclick="startSpeedTest()">▶ 开始测速</button>
+            <button class="btn btn-outline btn-sm" onclick="clearAllData()" title="清除所有保存的测速数据">🗑 清除数据</button>
+            <span id="progressInfo" style="font-size:0.92rem;color:#475569;margin-left:auto;"></span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    </div>
+
+    <!-- ===== 最快节点 + 加速 ===== -->
+    <div class="card">
+        <div class="flex-row" style="gap:12px 20px;">
+            <strong style="white-space:nowrap;">⚡ 最快节点</strong>
+            <select id="fastestNodeSelect" style="flex:1;min-width:200px;">
+                <option value="">等待测速…</option>
+            </select>
+            <button class="btn btn-success" onclick="goProxy()">🚀 使用选中节点加速</button>
+            <span id="selectedNodeInfo" class="selected-display" style="font-size:0.9rem;color:#0f172a;"></span>
+        </div>
+        <div style="margin-top:8px;font-size:0.85rem;color:#64748b;">
+            <span id="fastestDetail">—</span>
+        </div>
+    </div>
+
+    <!-- ===== 结果表格 ===== -->
+    <div class="card" style="overflow-x:auto;padding:0;">
+        <div style="padding:16px 20px 8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <h2 style="font-size:1.2rem;margin:0;font-weight:600;">全部节点测速结果</h2>
+            <span style="font-size:0.85rem;color:#64748b;">节点总数: <span id="nodeCount"></span> · 超时: 15s</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:50px;">#</th>
+                    <th style="min-width:140px;">节点域名</th>
+                    <th style="width:70px;">类型</th>
+                    <th style="width:100px;">延迟 (ms)</th>
+                    <th style="width:120px;">速度 (KB/s)</th>
+                    <th style="width:90px;">状态</th>
+                </tr>
+            </thead>
+            <tbody id="nodeTableBody"></tbody>
+        </table>
+        <div class="footer" style="padding:10px 20px 16px;">
+            <span>上次测速: <span id="lastTestTimeDisplay">—</span></span>
+            <span style="display:flex;gap:16px;">
+                <span>成功: <span id="successCount">0</span></span>
+                <span>失败: <span id="failCount">0</span></span>
+            </span>
+        </div>
+    </div>
+
+    <footer style="margin-top:12px;font-size:0.8rem;color:#94a3b8;text-align:center;">
+        数据保存在浏览器本地 · 刷新页面不丢失
+    </footer>
 
     <script>
         // ================================================================
-        // 1. 完整节点列表（从原站提取，共67个）
+        // 1. 节点列表（共67个）
         // ================================================================
         const NODES = [
             { name: 'gh.llkk.cc', type: '默认' },
@@ -78,7 +393,6 @@
             { name: '777.z321.cc.cd', type: '贡献' },
             { name: 'gg.z321.cc.cd', type: '贡献' },
             { name: 'g.z321.cc.cd', type: '贡献' },
-            // ---------- 测绘 ----------
             { name: 'slink.ltd', type: '测绘' },
             { name: 'github.tmby.shop', type: '测绘' },
             { name: 'ghpr.cc', type: '测绘' },
@@ -113,50 +427,267 @@
         ];
 
         // ================================================================
-        // 2. DOM 元素
+        // 2. 常量 & DOM
         // ================================================================
+        const STORAGE_KEY = 'gh_proxy_test_results_v2';
+        const SELECTED_KEY = 'gh_proxy_selected_node';
+        const TEST_FILE_KEY = 'gh_proxy_test_file';
+
         const tbody = document.getElementById('nodeTableBody');
         const progressSpan = document.getElementById('progressInfo');
+        const progressFill = document.getElementById('progressFill');
         const nodeCountSpan = document.getElementById('nodeCount');
         const fastestSelect = document.getElementById('fastestNodeSelect');
         const selectedNodeInfo = document.getElementById('selectedNodeInfo');
+        const fastestDetail = document.getElementById('fastestDetail');
+        const lastTestBadge = document.getElementById('lastTestBadge');
+        const lastTestTimeDisplay = document.getElementById('lastTestTimeDisplay');
+        const successCountSpan = document.getElementById('successCount');
+        const failCountSpan = document.getElementById('failCount');
+        const testFileInput = document.getElementById('testFileUrl');
+        const concurrencyInput = document.getElementById('concurrencyInput');
+        const startBtn = document.getElementById('startBtn');
+
         nodeCountSpan.textContent = NODES.length;
 
-        let rowData = [];
+        // 行数据映射：nodeName -> { tr, cells }
+        let rowMap = new Map();
+        // 存储所有测速结果 { nodeName: { speed, latency, status, error, timestamp } }
+        let resultsStore = {};
+        // 当前正在测速的标志
+        let isTesting = false;
+        // 已完成的节点数
+        let completedCount = 0;
+        // 成功/失败计数
+        let successCount = 0;
+        let failCount = 0;
+        // 当前测速的节点名称列表（用于进度）
+        let testingNodeNames = [];
 
         // ================================================================
-        // 3. 渲染初始表格
+        // 3. 存储函数
         // ================================================================
-        function renderInitialTable() {
+        function loadResults() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') {
+                        resultsStore = parsed;
+                        return;
+                    }
+                }
+            } catch (_) { /* ignore */ }
+            resultsStore = {};
+        }
+
+        function saveResults() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(resultsStore));
+            } catch (_) { /* ignore */ }
+        }
+
+        function loadSelectedNode() {
+            try {
+                return localStorage.getItem(SELECTED_KEY) || '';
+            } catch (_) { return ''; }
+        }
+
+        function saveSelectedNode(nodeName) {
+            try {
+                if (nodeName) {
+                    localStorage.setItem(SELECTED_KEY, nodeName);
+                } else {
+                    localStorage.removeItem(SELECTED_KEY);
+                }
+            } catch (_) { /* ignore */ }
+        }
+
+        function loadTestFileUrl() {
+            try {
+                const url = localStorage.getItem(TEST_FILE_KEY);
+                if (url) return url;
+            } catch (_) { /* ignore */ }
+            return 'https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat';
+        }
+
+        function saveTestFileUrl(url) {
+            try {
+                localStorage.setItem(TEST_FILE_KEY, url);
+            } catch (_) { /* ignore */ }
+        }
+
+        // ================================================================
+        // 4. 渲染表格 & 下拉框
+        // ================================================================
+        function buildRowMap() {
+            rowMap.clear();
             tbody.innerHTML = '';
-            rowData = [];
-            NODES.forEach((node, index) => {
+            NODES.forEach((node) => {
                 const tr = document.createElement('tr');
+                tr.dataset.node = node.name;
                 tr.innerHTML = `
-                    <td class="rank">-</td>
-                    <td>${node.name}</td>
-                    <td>${node.type}</td>
+                    <td class="rank-num">-</td>
+                    <td><span class="node-name">${node.name}</span></td>
+                    <td><span class="type-tag">${node.type}</span></td>
                     <td class="latency">-</td>
                     <td class="speed">-</td>
-                    <td class="status">待测</td>
+                    <td class="status-text pending">待测</td>
                 `;
                 tbody.appendChild(tr);
-                rowData.push({
-                    node,
+                rowMap.set(node.name, {
                     tr,
-                    rankTd: tr.querySelector('.rank'),
+                    rankTd: tr.querySelector('.rank-num'),
                     latencyTd: tr.querySelector('.latency'),
                     speedTd: tr.querySelector('.speed'),
-                    statusTd: tr.querySelector('.status')
+                    statusTd: tr.querySelector('.status-text'),
                 });
             });
-            fastestSelect.innerHTML = '<option value="">等待测速...</option>';
-            selectedNodeInfo.textContent = '';
         }
-        renderInitialTable();
+
+        function renderAllFromStore() {
+            let hasData = false;
+            let latestTime = 0;
+            let successTotal = 0;
+            let failTotal = 0;
+
+            for (const [name, row] of rowMap) {
+                const data = resultsStore[name];
+                if (data) {
+                    hasData = true;
+                    if (data.timestamp > latestTime) latestTime = data.timestamp;
+                    if (data.status === 'success') {
+                        successTotal++;
+                        row.rankTd.textContent = '?';
+                        row.latencyTd.textContent = data.latency !== undefined ? Math.round(data.latency) : '-';
+                        row.speedTd.textContent = data.speed !== undefined ? data.speed.toFixed(2) : '-';
+                        row.statusTd.textContent = '成功';
+                        row.statusTd.className = 'status-text success';
+                        row.statusTd.style.color = '';
+                    } else {
+                        failTotal++;
+                        row.rankTd.textContent = '✗';
+                        row.latencyTd.textContent = '-';
+                        row.speedTd.textContent = '-';
+                        row.statusTd.textContent = data.error || '失败';
+                        row.statusTd.className = 'status-text fail';
+                        row.statusTd.style.color = '';
+                    }
+                } else {
+                    row.rankTd.textContent = '-';
+                    row.latencyTd.textContent = '-';
+                    row.speedTd.textContent = '-';
+                    row.statusTd.textContent = '待测';
+                    row.statusTd.className = 'status-text pending';
+                    row.statusTd.style.color = '';
+                }
+            }
+
+            // 更新成功/失败计数
+            successCountSpan.textContent = successTotal;
+            failCountSpan.textContent = failTotal;
+
+            // 更新下拉框
+            updateDropdown();
+
+            // 更新最快节点显示
+            updateFastestDisplay();
+
+            // 更新测速时间
+            if (latestTime > 0) {
+                const d = new Date(latestTime);
+                const str = d.toLocaleString('zh-CN', { hour12: false });
+                lastTestTimeDisplay.textContent = str;
+                lastTestBadge.textContent = '📅 ' + str;
+                // 计算多久之前
+                const diff = Math.floor((Date.now() - latestTime) / 1000);
+                let ago = '';
+                if (diff < 60) ago = '刚刚';
+                else if (diff < 3600) ago = Math.floor(diff / 60) + ' 分钟前';
+                else if (diff < 86400) ago = Math.floor(diff / 3600) + ' 小时前';
+                else ago = Math.floor(diff / 86400) + ' 天前';
+                lastTestBadge.textContent = '📅 ' + str + ' (' + ago + ')';
+            } else {
+                lastTestTimeDisplay.textContent = '—';
+                lastTestBadge.textContent = '⏳ 尚未测速';
+            }
+
+            // 恢复选中的节点
+            const savedSelected = loadSelectedNode();
+            if (savedSelected && rowMap.has(savedSelected)) {
+                const opt = fastestSelect.querySelector(`option[value="${savedSelected}"]`);
+                if (opt) {
+                    opt.selected = true;
+                    selectedNodeInfo.textContent = '✅ 已选: ' + savedSelected;
+                }
+            }
+        }
+
+        function updateDropdown() {
+            // 收集所有成功的节点
+            const successEntries = [];
+            for (const [name, data] of Object.entries(resultsStore)) {
+                if (data.status === 'success' && data.speed !== undefined && data.speed > 0) {
+                    successEntries.push({ name, speed: data.speed, latency: data.latency, type: NODES.find(n => n.name ===
+                            name)?.type || '' });
+                }
+            }
+            successEntries.sort((a, b) => b.speed - a.speed);
+
+            // 清空下拉框，保留第一个占位
+            fastestSelect.innerHTML = '';
+
+            if (successEntries.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = isTesting ? '⏳ 测速中…' : '无可用节点';
+                fastestSelect.appendChild(opt);
+                fastestSelect.disabled = true;
+                return;
+            }
+
+            fastestSelect.disabled = false;
+            successEntries.forEach((entry, idx) => {
+                const opt = document.createElement('option');
+                opt.value = entry.name;
+                const rankStr = idx + 1;
+                const label = `#${rankStr} ${entry.name} (${entry.speed.toFixed(1)} KB/s)`;
+                opt.textContent = label;
+                if (idx === 0) opt.selected = true;
+                fastestSelect.appendChild(opt);
+            });
+
+            // 如果有保存的选中节点，尝试恢复
+            const saved = loadSelectedNode();
+            if (saved) {
+                const opt = fastestSelect.querySelector(`option[value="${saved}"]`);
+                if (opt) opt.selected = true;
+            }
+
+            // 更新最快详情
+            updateFastestDisplay();
+        }
+
+        function updateFastestDisplay() {
+            const successEntries = [];
+            for (const [name, data] of Object.entries(resultsStore)) {
+                if (data.status === 'success' && data.speed !== undefined && data.speed > 0) {
+                    successEntries.push({ name, speed: data.speed, latency: data.latency });
+                }
+            }
+            if (successEntries.length === 0) {
+                fastestDetail.textContent = isTesting ? '测速进行中…' : '暂无可用节点';
+                return;
+            }
+            successEntries.sort((a, b) => b.speed - a.speed);
+            const top = successEntries[0];
+            const nodeInfo = NODES.find(n => n.name === top.name);
+            const typeStr = nodeInfo ? nodeInfo.type : '';
+            fastestDetail.textContent = `🏆 ${top.name}  [${typeStr}]  ${top.speed.toFixed(1)} KB/s  (${top.latency !== undefined ? Math.round(top.latency) : '?'} ms)`;
+        }
 
         // ================================================================
-        // 4. 测速单个节点
+        // 5. 测速单个节点
         // ================================================================
         function testSingleNode(node, testFileUrl) {
             return new Promise((resolve) => {
@@ -170,46 +701,45 @@
                     method: 'GET',
                     signal: controller.signal,
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return response.arrayBuffer().then(buffer => {
-                        const endTime = performance.now();
-                        const duration = endTime - startTime;
-                        const sizeBytes = buffer.byteLength;
-                        const sizeKB = sizeBytes / 1024;
-                        const speedKBps = (sizeKB / (duration / 1000));
-                        return { duration, sizeKB, speedKBps, success: true };
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        return response.arrayBuffer().then(buffer => {
+                            const endTime = performance.now();
+                            const duration = endTime - startTime;
+                            const sizeBytes = buffer.byteLength;
+                            const sizeKB = sizeBytes / 1024;
+                            const speedKBps = (sizeKB / (duration / 1000));
+                            return { duration, sizeKB, speedKBps, success: true };
+                        });
+                    })
+                    .then(result => {
+                        clearTimeout(timeoutId);
+                        resolve({ node, success: true, ...result });
+                    })
+                    .catch(err => {
+                        clearTimeout(timeoutId);
+                        let errorMsg = err.message || '失败';
+                        if (err.name === 'AbortError') errorMsg = '超时';
+                        resolve({ node, success: false, error: errorMsg });
                     });
-                })
-                .then(result => {
-                    clearTimeout(timeoutId);
-                    resolve({ node, success: true, ...result });
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    let errorMsg = err.message || '失败';
-                    if (err.name === 'AbortError') errorMsg = '超时';
-                    resolve({ node, success: false, error: errorMsg });
-                });
             });
         }
 
         // ================================================================
-        // 5. 并发控制（支持用户自定义并发数）
+        // 6. 并发控制
         // ================================================================
         async function runWithConcurrency(tasks, concurrency) {
             if (concurrency <= 0 || !isFinite(concurrency) || concurrency >= tasks.length) {
-                // 不限制：一次性全部发起
                 return Promise.all(tasks.map(t => t()));
             } else {
-                // 限制并发
                 const results = [];
                 const executing = [];
                 for (const task of tasks) {
                     const p = task().then(result => {
-                        executing.splice(executing.indexOf(p), 1);
+                        const idx = executing.indexOf(p);
+                        if (idx !== -1) executing.splice(idx, 1);
                         return result;
                     });
                     results.push(p);
@@ -223,12 +753,44 @@
         }
 
         // ================================================================
-        // 6. 主测速函数
+        // 7. 主测速函数（带剪贴板自动填入）
         // ================================================================
         async function startSpeedTest() {
-            const testFileUrl = document.getElementById('testFileUrl').value.trim();
+            if (isTesting) {
+                alert('测速正在进行中，请稍候…');
+                return;
+            }
+
+            // ----- 新增：自动从剪贴板读取链接，填入或清空 -----
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text && text.trim()) {
+                    const trimmed = text.trim();
+                    try {
+                        new URL(trimmed); // 验证是否为有效URL
+                        // 是有效链接 → 填入并保存
+                        testFileInput.value = trimmed;
+                        saveTestFileUrl(trimmed);
+                    } catch (_) {
+                        // 不是有效链接 → 清空
+                        testFileInput.value = '';
+                        saveTestFileUrl('');
+                    }
+                } else {
+                    // 剪贴板为空 → 清空
+                    testFileInput.value = '';
+                    saveTestFileUrl('');
+                }
+            } catch (_) {
+                // 无法读取剪贴板 → 清空（避免保留旧值）
+                testFileInput.value = '';
+                saveTestFileUrl('');
+            }
+            // ------------------------------------------------
+
+            const testFileUrl = testFileInput.value.trim();
             if (!testFileUrl) {
-                alert('请输入测试文件URL');
+                alert('请输入测试文件URL（剪贴板未读取到有效链接）');
                 return;
             }
             try {
@@ -237,29 +799,47 @@
                 alert('URL格式无效');
                 return;
             }
+            saveTestFileUrl(testFileUrl);
 
-            // 读取并发数
-            const concurrencyInput = document.getElementById('concurrencyInput');
             let concurrency = parseInt(concurrencyInput.value, 10);
-            if (isNaN(concurrency) || concurrency < 0) {
-                concurrency = 0; // 视为不限制
-            }
-            // 如果为0，则设置为 tasks.length（不限制）
-            if (concurrency === 0) {
-                concurrency = NODES.length; // 全部并发
-            }
+            if (isNaN(concurrency) || concurrency < 0) concurrency = 0;
+            if (concurrency === 0) concurrency = NODES.length;
 
             // 重置状态
-            rowData.forEach(row => {
+            isTesting = true;
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ 测速中…';
+            completedCount = 0;
+            successCount = 0;
+            failCount = 0;
+            testingNodeNames = NODES.map(n => n.name);
+
+            // 清空旧结果
+            for (const name of testingNodeNames) {
+                delete resultsStore[name];
+            }
+            saveResults();
+
+            // 重置表格显示
+            for (const [name, row] of rowMap) {
                 row.rankTd.textContent = '-';
                 row.latencyTd.textContent = '-';
                 row.speedTd.textContent = '-';
-                row.statusTd.textContent = '排队...';
-                row.statusTd.style.color = 'gray';
-            });
-            progressSpan.textContent = `测速开始 (并发=${concurrency === NODES.length ? '∞' : concurrency}) ...`;
-            fastestSelect.innerHTML = '<option value="">测速中...</option>';
+                row.statusTd.textContent = '排队…';
+                row.statusTd.className = 'status-text pending';
+                row.statusTd.style.color = '';
+            }
+
+            // 更新下拉框
+            fastestSelect.innerHTML = '<option value="">⏳ 测速中…</option>';
+            fastestSelect.disabled = true;
+            fastestDetail.textContent = '测速进行中…';
             selectedNodeInfo.textContent = '';
+            progressSpan.textContent = `初始化 (并发=${concurrency === NODES.length ? '∞' : concurrency})`;
+            progressFill.style.width = '0%';
+            successCountSpan.textContent = '0';
+            failCountSpan.textContent = '0';
+            lastTestBadge.textContent = '⏳ 测速中…';
 
             // 生成任务
             const tasks = NODES.map((node) => {
@@ -267,90 +847,179 @@
             });
 
             const startAll = performance.now();
-            let completed = 0;
-            const results = [];
 
-            // 包装任务以更新进度
+            // 包装任务，每个完成时触发更新
             const wrappedTasks = tasks.map((task, index) => {
                 return async () => {
+                    const node = NODES[index];
                     const result = await task();
-                    completed++;
-                    progressSpan.textContent = `测速进行中 (${completed}/${NODES.length}) 并发=${concurrency === NODES.length ? '∞' : concurrency}`;
-                    const row = rowData[index];
+                    // 更新结果存储
                     if (result.success) {
-                        row.latencyTd.textContent = Math.round(result.duration);
-                        row.speedTd.textContent = result.speedKBps.toFixed(2);
-                        row.statusTd.textContent = '成功';
-                        row.statusTd.style.color = 'green';
-                        results.push({
-                            node: result.node,
-                            duration: result.duration,
-                            speedKBps: result.speedKBps,
-                            success: true
-                        });
+                        resultsStore[node.name] = {
+                            speed: result.speedKBps,
+                            latency: result.duration,
+                            status: 'success',
+                            timestamp: Date.now()
+                        };
+                        successCount++;
                     } else {
-                        row.statusTd.textContent = result.error;
-                        row.statusTd.style.color = 'red';
-                        results.push({
-                            node: result.node,
-                            success: false,
-                            error: result.error
-                        });
+                        resultsStore[node.name] = {
+                            status: 'error',
+                            error: result.error,
+                            timestamp: Date.now()
+                        };
+                        failCount++;
                     }
+                    saveResults();
+
+                    // 更新UI
+                    completedCount++;
+                    const row = rowMap.get(node.name);
+                    if (row) {
+                        if (result.success) {
+                            row.rankTd.textContent = '?';
+                            row.latencyTd.textContent = Math.round(result.duration);
+                            row.speedTd.textContent = result.speedKBps.toFixed(2);
+                            row.statusTd.textContent = '成功';
+                            row.statusTd.className = 'status-text success';
+                            row.statusTd.style.color = '';
+                        } else {
+                            row.rankTd.textContent = '✗';
+                            row.latencyTd.textContent = '-';
+                            row.speedTd.textContent = '-';
+                            row.statusTd.textContent = result.error;
+                            row.statusTd.className = 'status-text fail';
+                            row.statusTd.style.color = '';
+                        }
+                    }
+
+                    // 更新进度
+                    const pct = Math.round((completedCount / NODES.length) * 100);
+                    progressFill.style.width = pct + '%';
+                    progressSpan.textContent =
+                        `测速中 ${completedCount}/${NODES.length} (成功:${successCount} 失败:${failCount}) 并发=${concurrency === NODES.length ? '∞' : concurrency}`;
+                    successCountSpan.textContent = successCount;
+                    failCountSpan.textContent = failCount;
+
+                    // ★ 动态更新下拉框
+                    updateDropdown();
+                    updateFastestDisplay();
+
+                    // 恢复选中的节点
+                    const saved = loadSelectedNode();
+                    if (saved && rowMap.has(saved)) {
+                        const opt = fastestSelect.querySelector(`option[value="${saved}"]`);
+                        if (opt) opt.selected = true;
+                    }
+                    if (!fastestSelect.value) {
+                        const firstOpt = fastestSelect.querySelector('option[value!=""]');
+                        if (firstOpt) firstOpt.selected = true;
+                    }
+
                     return result;
                 };
             });
 
             await runWithConcurrency(wrappedTasks, concurrency);
 
+            // 测速完成
             const totalTime = ((performance.now() - startAll) / 1000).toFixed(1);
-            const successCount = results.filter(r => r.success).length;
-            progressSpan.textContent = `测速完成，总耗时 ${totalTime}s，成功 ${successCount}/${NODES.length}`;
+            isTesting = false;
+            startBtn.disabled = false;
+            startBtn.textContent = '▶ 开始测速';
 
-            // 排序：按速度降序
-            const successResults = results.filter(r => r.success);
-            successResults.sort((a, b) => b.speedKBps - a.speedKBps);
+            progressSpan.textContent = `✅ 测速完成，总耗时 ${totalTime}s，成功 ${successCount}/${NODES.length}`;
 
             // 更新排名
-            const rankMap = new Map();
-            successResults.forEach((r, idx) => {
-                rankMap.set(r.node.name, idx + 1);
-            });
-            rowData.forEach(row => {
-                const rank = rankMap.get(row.node.name);
-                row.rankTd.textContent = rank || '失败';
-            });
+            updateRanks();
 
-            // 填充下拉框
-            fastestSelect.innerHTML = '';
-            if (successResults.length === 0) {
-                fastestSelect.innerHTML = '<option value="">无可用节点</option>';
-                selectedNodeInfo.textContent = '所有节点不可用';
-                return;
+            // 最终更新下拉框和显示
+            updateDropdown();
+            updateFastestDisplay();
+
+            // 更新测速时间
+            const now = Date.now();
+            const d = new Date(now);
+            const str = d.toLocaleString('zh-CN', { hour12: false });
+            lastTestTimeDisplay.textContent = str;
+            lastTestBadge.textContent = '✅ ' + str;
+
+            if (successCount === 0) {
+                fastestSelect.innerHTML = '<option value="">❌ 无可用节点</option>';
+                fastestSelect.disabled = true;
+                fastestDetail.textContent = '所有节点均不可用，请检查网络或更换测试文件';
+                selectedNodeInfo.textContent = '⚠️ 无可用节点';
+            } else {
+                const firstOpt = fastestSelect.querySelector('option[value!=""]');
+                if (firstOpt) {
+                    firstOpt.selected = true;
+                    const selectedName = firstOpt.value;
+                    selectedNodeInfo.textContent = '✅ 已选: ' + selectedName;
+                    saveSelectedNode(selectedName);
+                }
+                fastestSelect.disabled = false;
             }
-            successResults.forEach((r, idx) => {
-                const opt = document.createElement('option');
-                opt.value = r.node.name;
-                opt.textContent = `[${r.node.type}] ${r.node.name} (${r.speedKBps.toFixed(2)} KB/s)`;
-                if (idx === 0) opt.selected = true;
-                fastestSelect.appendChild(opt);
-            });
-            const fastest = successResults[0];
-            selectedNodeInfo.textContent = `✅ 当前最快: ${fastest.node.name} (${fastest.speedKBps.toFixed(2)} KB/s)`;
+
+            saveResults();
         }
 
         // ================================================================
-        // 7. 使用选中节点加速
+        // 8. 更新排名
+        // ================================================================
+        function updateRanks() {
+            const successEntries = [];
+            for (const [name, data] of Object.entries(resultsStore)) {
+                if (data.status === 'success' && data.speed !== undefined && data.speed > 0) {
+                    successEntries.push({ name, speed: data.speed });
+                }
+            }
+            successEntries.sort((a, b) => b.speed - a.speed);
+
+            const rankMap = new Map();
+            successEntries.forEach((entry, idx) => {
+                rankMap.set(entry.name, idx + 1);
+            });
+
+            for (const [name, row] of rowMap) {
+                const rank = rankMap.get(name);
+                if (rank) {
+                    row.rankTd.textContent = rank;
+                    if (rank === 1) {
+                        row.rankTd.className = 'rank-num rank-1';
+                    } else {
+                        row.rankTd.className = 'rank-num';
+                    }
+                } else {
+                    const data = resultsStore[name];
+                    if (data && data.status === 'error') {
+                        row.rankTd.textContent = '✗';
+                        row.rankTd.className = 'rank-num';
+                    } else {
+                        row.rankTd.textContent = '-';
+                        row.rankTd.className = 'rank-num';
+                    }
+                }
+            }
+        }
+
+        // ================================================================
+        // 9. 使用选中节点加速
         // ================================================================
         function goProxy() {
-            const targetUrl = prompt('请输入要加速的 GitHub 文件链接（默认使用测试文件）:', document.getElementById('testFileUrl').value);
-            if (!targetUrl) return;
+            const targetUrl = prompt('请输入要加速的 GitHub 文件链接（默认使用测试文件）:', testFileInput.value);
+            if (targetUrl === null) return;
+            const url = targetUrl.trim();
+            if (!url) return;
+
             const selectedNode = fastestSelect.value;
             if (!selectedNode) {
-                alert('请先测速并选择一个节点');
+                alert('请先测速并选择一个可用节点');
                 return;
             }
-            let finalUrl = targetUrl.trim();
+            saveSelectedNode(selectedNode);
+            selectedNodeInfo.textContent = '✅ 已选: ' + selectedNode;
+
+            let finalUrl = url;
             if (!/^https?:\/\//i.test(finalUrl)) {
                 finalUrl = 'https://' + finalUrl;
             }
@@ -358,8 +1027,88 @@
             window.open(proxyUrl, '_blank');
         }
 
-        // 控制台提示
-        console.log('自定义并发测速已加载，输入 0 即不限制并发。');
+        // ================================================================
+        // 10. 清除数据
+        // ================================================================
+        function clearAllData() {
+            if (!confirm('确定要清除所有保存的测速数据和选择记录吗？')) return;
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(SELECTED_KEY);
+                // 不删除测试文件URL
+            } catch (_) { /* ignore */ }
+            resultsStore = {};
+            saveResults();
+            for (const [name, row] of rowMap) {
+                row.rankTd.textContent = '-';
+                row.latencyTd.textContent = '-';
+                row.speedTd.textContent = '-';
+                row.statusTd.textContent = '待测';
+                row.statusTd.className = 'status-text pending';
+                row.statusTd.style.color = '';
+            }
+            fastestSelect.innerHTML = '<option value="">等待测速…</option>';
+            fastestSelect.disabled = true;
+            fastestDetail.textContent = '—';
+            selectedNodeInfo.textContent = '';
+            lastTestTimeDisplay.textContent = '—';
+            lastTestBadge.textContent = '⏳ 尚未测速';
+            successCountSpan.textContent = '0';
+            failCountSpan.textContent = '0';
+            progressSpan.textContent = '';
+            progressFill.style.width = '0%';
+        }
+
+        // ================================================================
+        // 11. 初始化
+        // ================================================================
+        function init() {
+            const savedUrl = loadTestFileUrl();
+            testFileInput.value = savedUrl;
+            loadResults();
+            buildRowMap();
+            renderAllFromStore();
+
+            const savedSelected = loadSelectedNode();
+            if (savedSelected && rowMap.has(savedSelected)) {
+                const opt = fastestSelect.querySelector(`option[value="${savedSelected}"]`);
+                if (opt) {
+                    opt.selected = true;
+                    selectedNodeInfo.textContent = '✅ 已选: ' + savedSelected;
+                }
+            }
+
+            fastestSelect.addEventListener('change', function() {
+                const val = this.value;
+                if (val) {
+                    saveSelectedNode(val);
+                    selectedNodeInfo.textContent = '✅ 已选: ' + val;
+                } else {
+                    saveSelectedNode('');
+                    selectedNodeInfo.textContent = '';
+                }
+            });
+
+            testFileInput.addEventListener('change', function() {
+                const url = this.value.trim();
+                if (url) {
+                    try {
+                        new URL(url);
+                        saveTestFileUrl(url);
+                    } catch (_) { /* ignore */ }
+                }
+            });
+
+            console.log('✅ GitHub Proxy 测速工具已加载，数据已恢复');
+            console.log(`📊 共 ${NODES.length} 个节点，已保存 ${Object.keys(resultsStore).length} 条测速记录`);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        window.startSpeedTest = startSpeedTest;
+        window.goProxy = goProxy;
+        window.clearAllData = clearAllData;
     </script>
+
 </body>
 </html>
