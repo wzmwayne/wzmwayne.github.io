@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!-- ========== 备用入口：放置在 head 之前，无样式依赖，最早加载 ========== -->
+<a href="https://wzml.cc.cd/old" style="position:absolute; top:0; left:0; z-index:10000;">备用入口（旧版）</a>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>玩坏电脑的小站 · 导航</title>
+    <!-- 无 JavaScript 时直接跳转至旧版 -->
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=https://wzml.cc.cd/old">
+    </noscript>
     <style>
+        /* ---------- 原始样式（未改动） ---------- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -133,10 +140,44 @@
     </style>
 </head>
 <body>
+    <!-- ========== 跳转逻辑：特性检测 & 加载超时（ES5 兼容） ========== -->
+    <script>
+        (function() {
+            // ----- 1. 全面特性检测（覆盖老旧浏览器、IE、早期 Safari/WebView） -----
+            // 检测关键 API：Promise, fetch, requestAnimationFrame
+            // 任何一项不支持即认为浏览器过旧，强制跳转
+            if (typeof Promise === 'undefined' ||
+                typeof fetch === 'undefined' ||
+                typeof requestAnimationFrame === 'undefined') {
+                location.href = 'https://wzml.cc.cd/old';
+                return;  // 后续代码不再执行
+            }
+
+            // ----- 2. 加载超时检测（15 秒） -----
+            var timeoutId = setTimeout(function() {
+                location.href = 'https://wzml.cc.cd/old';
+            }, 15000);
+
+            // 页面加载完成后取消超时
+            function clearRedirect() {
+                clearTimeout(timeoutId);
+            }
+
+            // 兼容所有浏览器的事件绑定（IE6+）
+            if (window.addEventListener) {
+                window.addEventListener('load', clearRedirect, false);
+            } else if (window.attachEvent) {
+                window.attachEvent('onload', clearRedirect);
+            } else {
+                window.onload = clearRedirect;
+            }
+        })();
+    </script>
+
+    <!-- ========== 原有页面内容（完全未改动） ========== -->
     <h2 class="page-title">玩坏电脑的小站</h2>
     <div class="categories-container" id="categoriesContainer"></div>
-    <img src="https://wzml.cc.cd/gsb.png"
-    alt="Custom Cursor" class="custom-cursor" id="customCursor">
+    <img src="https://wzml.cc.cd/gsb.png" alt="Custom Cursor" class="custom-cursor" id="customCursor">
 
     <script>
         (function() {
@@ -211,10 +252,12 @@
             renderCategories();
 
             // 自定义光标
-            let cursorX = 0, cursorY = 0;
+            let cursorX = 0,
+                cursorY = 0;
             let cursorVisible = false;
             let rafId = null;
-            let pendingX = 0, pendingY = 0;
+            let pendingX = 0,
+                pendingY = 0;
 
             function updateCursorPosition() {
                 customCursor.style.left = pendingX + 'px';
