@@ -105,6 +105,22 @@
             flex-shrink: 0;
         }
 
+        /* 折叠后不残留空白，直接露出背景 */
+        .category-card.is-collapsed {
+            padding-bottom: 0;
+        }
+        .category-card.is-collapsed .category-title {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .sub-group.is-collapsed {
+            padding-bottom: 0;
+        }
+        .sub-group.is-collapsed .sub-group-title {
+            margin-bottom: 0;
+        }
+
         .category-body {
             display: flex;
             flex-direction: column;
@@ -783,7 +799,10 @@
 
                 var body = document.createElement('div');
                 body.className = level === 0 ? 'category-body' : 'sub-group-body';
-                if (collapsed) body.style.display = 'none';
+                if (collapsed) {
+                    body.style.display = 'none';
+                    wrap.classList.add('is-collapsed');
+                }
 
                 for (var key in group) {
                     if (!group.hasOwnProperty(key)) continue;
@@ -809,6 +828,11 @@
                         var isHidden = body.style.display === 'none';
                         body.style.display = isHidden ? '' : 'none';
                         marker.textContent = isHidden ? '▾' : '▸';
+                        if (isHidden) {
+                            wrap.classList.remove('is-collapsed');
+                        } else {
+                            wrap.classList.add('is-collapsed');
+                        }
                     });
                 }
             }
