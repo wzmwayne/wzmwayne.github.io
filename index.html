@@ -85,6 +85,156 @@
             user-select: none;
         }
 
+        .category-title.collapsible,
+        .sub-group-title.collapsible {
+            cursor: pointer;
+            pointer-events: auto;
+            user-select: none;
+        }
+        .category-title.collapsible:hover,
+        .sub-group-title.collapsible:hover {
+            color: #2980b9;
+        }
+
+        .group-marker {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.85em;
+            flex-shrink: 0;
+        }
+
+        .category-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sub-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .sub-group-title {
+            font-size: 1.02rem;
+            font-weight: 600;
+            color: #34495e;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .sub-group-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .text-item {
+            padding: 8px 10px;
+            font-size: 0.92rem;
+            color: #555;
+            background: rgba(52, 152, 219, 0.06);
+            border-left: 3px solid #3498db;
+            border-radius: 6px;
+            line-height: 1.6;
+            word-break: break-word;
+            user-select: text;
+        }
+
+        /* ---------- 公告面板 ---------- */
+        .announcement-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 1100px;
+            box-sizing: border-box;
+            margin-bottom: 25px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .announcement-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .announcement-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #34495e;
+            letter-spacing: 1px;
+        }
+
+        .announcement-count {
+            font-size: 0.8rem;
+            color: #64748b;
+            background: #f1f4f9;
+            padding: 1px 10px;
+            border-radius: 20px;
+        }
+
+        .announcement-toggle {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .announcement-body {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 6px 20px 14px;
+        }
+
+        .announcement-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .announcement-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+        }
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .announcement-item-date {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin-right: 10px;
+        }
+
+        .announcement-item-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .announcement-item-content {
+            margin-top: 6px;
+            color: #555;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
         button {
             padding: 14px 18px;
             font-size: 15px;
@@ -220,6 +370,15 @@
                 padding: 13px 16px;
                 font-size: 15px;
             }
+            .announcement-panel {
+                width: calc(100% - 30px);
+            }
+            .announcement-header {
+                padding: 12px 15px;
+            }
+            .announcement-body {
+                padding: 4px 15px 12px;
+            }
             #ua-footer {
                 font-size: 12px;
                 padding: 12px 15px;
@@ -264,52 +423,26 @@
         })();
     </script>
 
-    <!-- ========== 链接数据提前定义（全局变量） ========== -->
-    <script>
-        // 将 categories 数据放在这里，以便尽早加载
-        var categories = {
-            "快链接（仅提供链接，不承担任何责任）": {
-                "老豆荚旧版": "https://oldpods.mysxl.cn/old",
-                "“新月的摇篮曲”歌曲下载": "https://ghproxy.net/github.com/wzmwayne/wzmwayne.github.io/releases/download/data/HOYO-MiX.-.Lullaby.of.the.New.Moon.I.Somnias.a.Luna.mp3",
-                "读日月前事（并非整活）": "https://whdn.lanzouu.com/iyxXS3qrtvtg",
-                "下载轻松签": "https://xiaobai51.top",
-                "下载flclash": "https://pan.huang1111.cn/s/jR3KDuy",
-                "下载chrome旧版(edgeone)": "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/4.4.Chrome_80.0.3987.149.apk",
-                "下载chrome旧版(fastly)": "https://cdn.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/4.4.Chrome_80.0.3987.149.apk",
-                "下载mt管理器(官网)": "https://mt2.cn/download/",
-                "下载白名单管理器（即将开源）(fastly)": "https://cdn.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/whitelist.apk",
-                "下载白名单管理器（即将开源）(edgeone)": "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/whitelist.apk"
-            },
-            "较大项目": {
-                "下载 BetterSeewo": "https://wzml.cc.cd/betterseewo/",
-                "下载 锁屏工具": "https://github.com/wzmwayne/locker/releases/download/1.0/default.exe",
-                "锁屏介绍": "https://github.com/wzmwayne/locker/releases/tag/1.0",
-                "iFlow API": "https://wzml.cc.cd/iflow-api/#",
-                "touchtools": "https://wzml.cc.cd/WPPtools/"
-            },
-            "在线工具": {
-                "Online CMD": "https://wzml.cc.cd/onlin_cmd/",
-                "增加文件大小": "https://wzml.cc.cd/Increase_File_Size/",
-                "PrintHelper在线灵蝶版": "https://wzml.cc.cd/print_helper/",
-                "github加速": "https://wzml.cc.cd/ghp",
-                "教你 Bing 搜索": "https://wzmwayne.github.io/bing-search-tutorial/"
-            },
-            "游戏与启动": {
-                "MC Lunch": "https://wzml.cc.cd/mclunch/"
-            },
-            "篡改猴脚本": {
-                "ScriptWeaver灵蝶": "https://wzml.cc.cd/ScriptWeaver/"
-            },
-            "社交与其它": {
-                "我的哔哩哔哩(已封号)": "https://space.bilibili.com/3546822289131703",
-                "Free VPN (Clash) ": "https://ghproxy.net/github.com/Au1rxx/free-vpn-subscriptions/raw/main/output/clash.yaml",
-                "webd网盘": "https://wzml.cc.cd/github-webd/"
-            }
-        };
-    </script>
+    <!-- ========== 链接数据（单独文件维护） ========== -->
+    <script src="data/links.js"></script>
+    <!-- ========== 公告数据（单独文件维护） ========== -->
+    <script src="data/announcements.js"></script>
 
     <!-- ========== 原有页面内容 ========== -->
     <h2 class="page-title">玩坏电脑的小站</h2>
+
+    <!-- ========== 公告面板（默认折叠） ========== -->
+    <div class="announcement-panel" id="announcementPanel">
+        <div class="announcement-header" id="announcementHeader">
+            <span class="announcement-title">公告</span>
+            <span class="announcement-count" id="announcementCount"></span>
+            <span class="announcement-toggle" id="announcementToggle">▸ 展开</span>
+        </div>
+        <div class="announcement-body" id="announcementBody" style="display:none;">
+            <ul class="announcement-list" id="announcementList"></ul>
+        </div>
+    </div>
+
     <div class="categories-container" id="categoriesContainer"></div>
     <img src="https://wzml.cc.cd/gsb.png" alt="Custom Cursor" class="custom-cursor" id="customCursor">
 
@@ -596,35 +729,96 @@
             var container = document.getElementById('categoriesContainer');
             var customCursor = document.getElementById('customCursor');
 
+            // ---------- 链接渲染（支持嵌套分组 / 文字组件 / setting） ----------
+            function getGroupSetting(group) {
+                if (group && typeof group === 'object' && group.setting && typeof group.setting === 'object') {
+                    return group.setting;
+                }
+                return {};
+            }
+
+            function makeLinkButton(name, url) {
+                var button = document.createElement('button');
+                button.textContent = name;
+                button.addEventListener('click', (function(u) {
+                    return function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        window.open(u, '_blank');
+                    };
+                })(url));
+                button.addEventListener('mouseup', function(e) { e.stopPropagation(); });
+                button.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+                return button;
+            }
+
+            function makeTextItem(text) {
+                var div = document.createElement('div');
+                div.className = 'text-item';
+                div.textContent = text;
+                return div;
+            }
+
+            // 递归渲染一个分组；level 0 为卡片，>0 为嵌套子分组
+            function appendGroup(parent, group, title, level) {
+                var settings = getGroupSetting(group);
+                var collapsible = settings.collapsible !== false;
+                var collapsed = settings.collapsed === true;
+
+                var wrap = document.createElement('div');
+                wrap.className = level === 0 ? 'category-card' : 'sub-group';
+
+                var header = document.createElement(level === 0 ? 'h3' : 'h4');
+                header.className = level === 0 ? 'category-title' : 'sub-group-title';
+                header.textContent = title;
+
+                var marker = null;
+                if (collapsible) {
+                    header.classList.add('collapsible');
+                    marker = document.createElement('span');
+                    marker.className = 'group-marker';
+                    marker.textContent = collapsed ? '▸' : '▾';
+                    header.insertBefore(marker, header.firstChild);
+                }
+
+                var body = document.createElement('div');
+                body.className = level === 0 ? 'category-body' : 'sub-group-body';
+                if (collapsed) body.style.display = 'none';
+
+                for (var key in group) {
+                    if (!group.hasOwnProperty(key)) continue;
+                    if (key === 'setting') continue;
+                    var value = group[key];
+                    if (typeof value === 'string') {
+                        if (value.indexOf('[text]') === 0) {
+                            body.appendChild(makeTextItem(value.slice(6)));
+                        } else {
+                            body.appendChild(makeLinkButton(key, value));
+                        }
+                    } else if (typeof value === 'object') {
+                        appendGroup(body, value, key, level + 1);
+                    }
+                }
+
+                wrap.appendChild(header);
+                wrap.appendChild(body);
+                parent.appendChild(wrap);
+
+                if (collapsible) {
+                    header.addEventListener('click', function() {
+                        var isHidden = body.style.display === 'none';
+                        body.style.display = isHidden ? '' : 'none';
+                        marker.textContent = isHidden ? '▾' : '▸';
+                    });
+                }
+            }
+
             function renderCategories() {
                 container.innerHTML = '';
                 for (var categoryName in categories) {
                     if (categories.hasOwnProperty(categoryName)) {
-                        var card = document.createElement('div');
-                        card.className = 'category-card';
-                        var title = document.createElement('h3');
-                        title.className = 'category-title';
-                        title.textContent = categoryName;
-                        card.appendChild(title);
-                        var buttons = categories[categoryName];
-                        for (var btnName in buttons) {
-                            if (buttons.hasOwnProperty(btnName)) {
-                                var link = buttons[btnName];
-                                var button = document.createElement('button');
-                                button.textContent = btnName;
-                                button.addEventListener('click', (function(url) {
-                                    return function(e) {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        window.open(url, '_blank');
-                                    };
-                                })(link));
-                                button.addEventListener('mouseup', function(e) { e.stopPropagation(); });
-                                button.addEventListener('mousedown', function(e) { e.stopPropagation(); });
-                                card.appendChild(button);
-                            }
-                        }
-                        container.appendChild(card);
+                        if (categoryName === 'setting') continue;
+                        appendGroup(container, categories[categoryName], categoryName, 0);
                     }
                 }
             }
@@ -710,6 +904,53 @@
             customCursor.style.top = cursorY + 'px';
             customCursor.style.display = 'block';
             cursorVisible = true;
+        })();
+    </script>
+
+    <!-- ========== 公告渲染（默认折叠） ========== -->
+    <script>
+        (function() {
+            var panel = document.getElementById('announcementPanel');
+            if (!panel) return;
+            var header = document.getElementById('announcementHeader');
+            var body = document.getElementById('announcementBody');
+            var toggle = document.getElementById('announcementToggle');
+            var list = document.getElementById('announcementList');
+            var countSpan = document.getElementById('announcementCount');
+
+            var items = (typeof announcements === 'object' && announcements !== null && announcements.length) ? announcements : [];
+            countSpan.textContent = items.length + ' 条公告';
+
+            for (var i = 0; i < items.length; i++) {
+                var a = items[i] || {};
+                var li = document.createElement('li');
+                li.className = 'announcement-item';
+                if (a.date) {
+                    var d = document.createElement('span');
+                    d.className = 'announcement-item-date';
+                    d.textContent = a.date;
+                    li.appendChild(d);
+                }
+                if (a.title) {
+                    var t = document.createElement('span');
+                    t.className = 'announcement-item-title';
+                    t.textContent = a.title;
+                    li.appendChild(t);
+                }
+                if (a.content) {
+                    var c = document.createElement('div');
+                    c.className = 'announcement-item-content';
+                    c.textContent = a.content;
+                    li.appendChild(c);
+                }
+                list.appendChild(li);
+            }
+
+            header.addEventListener('click', function() {
+                var isHidden = body.style.display === 'none';
+                body.style.display = isHidden ? '' : 'none';
+                toggle.textContent = isHidden ? '▾ 收起' : '▸ 展开';
+            });
         })();
     </script>
 </body>

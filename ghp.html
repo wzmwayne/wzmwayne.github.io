@@ -302,7 +302,7 @@
             <label for="testFileUrl">📌 测速文件</label>
             <input type="text" id="testFileUrl" readonly
             value="https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat" />
-            <span style="font-size:0.8rem;color:#94a3b8;">固定不变</span>
+            <span class="badge" id="testFileSize">检测大小中…</span>
         </div>
         <!-- 下载文件（可编辑 + 自动剪贴板） -->
         <div class="row mb-1">
@@ -452,7 +452,7 @@
         const SELECTED_KEY = 'gh_proxy_selected_node';
         const DOWNLOAD_URL_KEY = 'gh_proxy_download_url';
 
-        // 固定测试文件（不可变）
+        // 固定测试文件（不可变，用于真实文件下载测速）
         const TEST_FILE_URL = 'https://github.com/wzmwayne/wzmwayne.github.io/raw/refs/heads/main/test_file.dat';
 
         const tbody = document.getElementById('nodeTableBody');
@@ -467,6 +467,7 @@
         const successCountSpan = document.getElementById('successCount');
         const failCountSpan = document.getElementById('failCount');
         const testFileInput = document.getElementById('testFileUrl');
+        const testFileSizeSpan = document.getElementById('testFileSize');
         const downloadUrlInput = document.getElementById('downloadUrl');
         const concurrencyInput = document.getElementById('concurrencyInput');
         const startBtn = document.getElementById('startBtn');
@@ -949,7 +950,30 @@
         }
 
         // ================================================================
-        // 11. 清除数据
+        // 11. 测速文件大小显示
+        // ================================================================
+        function formatSize(bytes) {
+            if (bytes >= 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+            if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return bytes + ' B';
+        }
+
+        async function loadTestFileSize() {
+            try {
+                const res = await fetch(TEST_FILE_URL, { method: 'HEAD' });
+                const len = parseInt(res.headers.get('Content-Length') || '0', 10);
+                if (len > 0) {
+                    testFileSizeSpan.textContent = formatSize(len);
+                    return;
+                }
+            } catch (_) {
+                // 无法获取时使用已知值兜底
+            }
+            testFileSizeSpan.textContent = '2 MB';
+        }
+
+        // ================================================================
+        // 12. 清除数据
         // ================================================================
         function clearAllData() {
             if (!confirm('确定要清除所有保存的测速数据和选择记录吗？')) return;
@@ -984,6 +1008,7 @@
         function init() {
             // 固定测试文件
             testFileInput.value = TEST_FILE_URL;
+            loadTestFileSize();
 
             // 加载数据
             loadResults();
