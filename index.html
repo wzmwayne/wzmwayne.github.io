@@ -424,12 +424,8 @@
         })();
     </script>
 
-    <!-- ========== 链接数据（单独文件维护） ========== -->
-    <script src="data/links.js"></script>
-    <!-- ========== 公告数据（单独文件维护） ========== -->
-    <script src="data/announcements.js"></script>
-
     <!-- ========== 原有页面内容 ========== -->
+    <!-- 链接/公告数据由下方脚本通过 fetch 加载（带缓存失效参数） -->
     <h2 class="page-title">玩坏电脑的小站</h2>
 
     <!-- ========== 公告面板（默认折叠） ========== -->
@@ -824,7 +820,70 @@
                 }
             }
 
-            renderCategories();
+            // ---------- 公告渲染（默认折叠） ----------
+            function renderAnnouncements() {
+                var panel = document.getElementById('announcementPanel');
+                if (!panel) return;
+                var header = document.getElementById('announcementHeader');
+                var body = document.getElementById('announcementBody');
+                var toggle = document.getElementById('announcementToggle');
+                var list = document.getElementById('announcementList');
+                var countSpan = document.getElementById('announcementCount');
+
+                var items = (typeof announcements === 'object' && announcements !== null && announcements.length) ? announcements : [];
+                countSpan.textContent = items.length + ' 条公告';
+
+                for (var i = 0; i < items.length; i++) {
+                    var a = items[i] || {};
+                    var li = document.createElement('li');
+                    li.className = 'announcement-item';
+                    if (a.date) {
+                        var d = document.createElement('span');
+                        d.className = 'announcement-item-date';
+                        d.textContent = a.date;
+                        li.appendChild(d);
+                    }
+                    if (a.title) {
+                        var t = document.createElement('span');
+                        t.className = 'announcement-item-title';
+                        t.textContent = a.title;
+                        li.appendChild(t);
+                    }
+                    if (a.content) {
+                        var c = document.createElement('div');
+                        c.className = 'announcement-item-content';
+                        c.textContent = a.content;
+                        li.appendChild(c);
+                    }
+                    list.appendChild(li);
+                }
+
+                header.addEventListener('click', function() {
+                    var isHidden = body.style.display === 'none';
+                    body.style.display = isHidden ? '' : 'none';
+                    toggle.textContent = isHidden ? '▾ 收起' : '▸ 展开';
+                });
+            }
+
+            // ---------- 数据加载（时间戳参数强制绕过缓存） ----------
+            function fetchScript(url) {
+                return fetch(url + '?_=' + Date.now()).then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.text();
+                });
+            }
+
+            Promise.all([fetchScript('data/links.js'), fetchScript('data/announcements.js')]).then(function(texts) {
+                (0, eval)(texts[0]);
+                (0, eval)(texts[1]);
+                renderCategories();
+                renderAnnouncements();
+            }).catch(function() {
+                var msg = document.createElement('div');
+                msg.className = 'text-item';
+                msg.textContent = '链接数据加载失败，请刷新重试';
+                container.appendChild(msg);
+            });
 
             // 自定义光标（完全保留）
             var cursorX = 0,
@@ -905,53 +964,6 @@
             customCursor.style.top = cursorY + 'px';
             customCursor.style.display = 'block';
             cursorVisible = true;
-        })();
-    </script>
-
-    <!-- ========== 公告渲染（默认折叠） ========== -->
-    <script>
-        (function() {
-            var panel = document.getElementById('announcementPanel');
-            if (!panel) return;
-            var header = document.getElementById('announcementHeader');
-            var body = document.getElementById('announcementBody');
-            var toggle = document.getElementById('announcementToggle');
-            var list = document.getElementById('announcementList');
-            var countSpan = document.getElementById('announcementCount');
-
-            var items = (typeof announcements === 'object' && announcements !== null && announcements.length) ? announcements : [];
-            countSpan.textContent = items.length + ' 条公告';
-
-            for (var i = 0; i < items.length; i++) {
-                var a = items[i] || {};
-                var li = document.createElement('li');
-                li.className = 'announcement-item';
-                if (a.date) {
-                    var d = document.createElement('span');
-                    d.className = 'announcement-item-date';
-                    d.textContent = a.date;
-                    li.appendChild(d);
-                }
-                if (a.title) {
-                    var t = document.createElement('span');
-                    t.className = 'announcement-item-title';
-                    t.textContent = a.title;
-                    li.appendChild(t);
-                }
-                if (a.content) {
-                    var c = document.createElement('div');
-                    c.className = 'announcement-item-content';
-                    c.textContent = a.content;
-                    li.appendChild(c);
-                }
-                list.appendChild(li);
-            }
-
-            header.addEventListener('click', function() {
-                var isHidden = body.style.display === 'none';
-                body.style.display = isHidden ? '' : 'none';
-                toggle.textContent = isHidden ? '▾ 收起' : '▸ 展开';
-            });
         })();
     </script>
 </body>
