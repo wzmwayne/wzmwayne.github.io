@@ -9,7 +9,7 @@
 //       collapsible  : false 禁止折叠该组（其余键预留扩展）
 var categories = {
     "快链接（仅提供链接，不承担任何责任）": {
-        "setting": { "collapsed": false },
+        "setting": { "collapsed": true },
         "老豆荚旧版": "https://oldpods.mysxl.cn/old",
         "“新月的摇篮曲”歌曲下载": "https://ghproxy.net/github.com/wzmwayne/wzmwayne.github.io/releases/download/data/HOYO-MiX.-.Lullaby.of.the.New.Moon.I.Somnias.a.Luna.mp3",
         "读日月前事（并非整活）": "https://whdn.lanzouu.com/iyxXS3qrtvtg",
