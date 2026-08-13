@@ -13,6 +13,7 @@ var categories = {
         "老豆荚旧版": "https://oldpods.mysxl.cn/old",
         "“新月的摇篮曲”歌曲下载": "https://ghproxy.net/github.com/wzmwayne/wzmwayne.github.io/releases/download/data/HOYO-MiX.-.Lullaby.of.the.New.Moon.I.Somnias.a.Luna.mp3",
         "读日月前事（并非整活）": "https://whdn.lanzouu.com/iyxXS3qrtvtg",
+        "番茄小说简版": "https://whdn.lanzouu.com/iKRP1427pd4b",
         "下载轻松签": "https://xiaobai51.top",
         "下载flclash": "https://pan.huang1111.cn/s/jR3KDuy",
         "下载chrome旧版(edgeone)": "https://edgeone.gh-proxy.org/https://github.com/wzmwayne/wzmwayne.github.io/releases/download/data/4.4.Chrome_80.0.3987.149.apk",
