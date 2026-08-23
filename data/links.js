@@ -52,7 +52,8 @@ var categories = {
     "社交与其它": {
         "setting": { "collapsed": false },
         "我的哔哩哔哩(已封号)": "https://space.bilibili.com/3546822289131703",
-        "Free VPN (Clash) ": "https://ghproxy.net/github.com/Au1rxx/free-vpn-subscriptions/raw/main/output/clash.yaml",
+        "Free VPN · yoyapai (Clash)": "https://ghproxy.net/github.com/wzmwayne/proxy-node/raw/main/output/yoyapai/clash.yaml",
+        "Free VPN · au1rxx (Clash)": "https://ghproxy.net/github.com/wzmwayne/proxy-node/raw/main/output/au1rxx/clash.yaml",
         "webd网盘": "https://wzml.cc.cd/github-webd/"
     }
 };
