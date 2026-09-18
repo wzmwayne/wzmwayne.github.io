@@ -37,6 +37,7 @@ var categories = {
         }
     },
     "在线工具": {
+        "vidlink视频解析": " https://vl.wzml.cc.cd/",
         "Online CMD": "https://wzml.cc.cd/onlin_cmd/",
         "增加文件大小": "https://wzml.cc.cd/Increase_File_Size/",
         "PrintHelper在线灵蝶版": "https://wzml.cc.cd/print_helper/",
