@@ -98,6 +98,14 @@ select{padding:6px 9px;border:1px solid var(--line);border-radius:8px;font:13px 
 .presets button:hover{border-color:#9fd9bd;background:#f2fbf6}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .hint{margin:12px 0 0;font-size:12.5px;color:var(--muted);font-family:ui-monospace,Menlo,monospace;line-height:1.6}
+.snips{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.snip pre{max-height:220px}
+.tabmock{display:flex;align-items:flex-end;gap:0;margin-top:16px;flex-wrap:wrap}
+.tab{display:flex;align-items:center;gap:8px;background:#dfe6e2;color:#33564a;font-size:12.5px;
+  padding:8px 16px;border-radius:10px 10px 0 0;margin-right:4px;border:1px solid var(--line);border-bottom:0}
+.tab.active{background:#fff;font-weight:600}
+.tab img{display:block}
+.tabhint{margin-left:10px;font-size:11.5px;color:var(--muted);align-self:center}
 .dump{margin:0;font:13px/1.25 ui-monospace,Menlo,Consolas,monospace;white-space:pre;color:#2f6b52}
 .duo{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-top:14px}
 footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);font-size:13px}
@@ -156,6 +164,28 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
     <div class="actions" style="margin-top:14px"><button class="btn" id="dlSelf">下载本页 (logo.html)</button>
       <span class="hint" style="margin:0" id="selfInfo"></span></div>
   </section>
+
+
+  <section class="card" id="fav">
+    <div class="mhead"><h3><span class="num">＋</span>一键设置标题栏图标<span class="tag">可复制</span></h3></div>
+    <p class="note">下面每段都是<b>自包含的 data URI</b>——直接粘进目标网站的 <code>&lt;head&gt;</code> 就行，不用上传任何文件。推荐第 ① 段。</p>
+    <div class="tabmock">
+      <div class="tab"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E" width="16" height="16" alt="">你的网站</div>
+      <div class="tab active"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg==" width="16" height="16" alt="" style="image-rendering:pixelated">你的网站</div>
+      <span class="tabhint">左：SVG（5×4）　右：16×16 PNG 兜底　—　标签页里的实际效果</span>
+    </div>
+    <div class="snips"><div class="code snip"><div class="cbar"><span>① 推荐 · 一行 SVG（就是 5×4 矢量，任意缩放都锐利）</span><button class="copy" type="button">复制</button></div><pre><code>&lt;link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E"&gt;</code></pre></div><div class="code snip"><div class="cbar"><span>② 兼容写法 · SVG + 16×16 PNG 兜底 + iOS 主屏图标</span><button class="copy" type="button">复制</button></div><pre><code>&lt;link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg=="&gt;
+&lt;link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg=="&gt;</code></pre></div><div class="code snip"><div class="cbar"><span>③ 只要 PNG · 极简一行（老站点、邮件模板、论坛签名）</span><button class="copy" type="button">复制</button></div><pre><code>&lt;link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg=="&gt;</code></pre></div><div class="code snip"><div class="cbar"><span>④ 改不了 <head> 时 · 一行 JS 运行时注入（CMS / 页面搭建器）</span><button class="copy" type="button">复制</button></div><pre><code>&lt;script&gt;
+(function(){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';
+l.href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E";document.head.appendChild(l);})();
+&lt;/script&gt;</code></pre></div><div class="code snip"><div class="cbar"><span>⑤ 想放独立文件 · 存成 logo.svg，再引用</span><button class="copy" type="button">复制</button></div><pre><code>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 4" shape-rendering="crispEdges"&gt;
+  &lt;path fill="#76DFA1" d="M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z"/&gt;
+&lt;/svg&gt;
+
+&lt;link rel="icon" type="image/svg+xml" href="/logo.svg"&gt;</code></pre></div></div>
+  </section>
+
 
   <section class="card spec" id="spec">
     <div class="mhead"><h3><span class="num">0</span>规格</h3><span class="tag">位图实测</span></div>
