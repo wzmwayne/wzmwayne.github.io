@@ -75,7 +75,10 @@ main{max-width:1180px;margin:0 auto;padding:24px 24px 80px;display:flex;flex-dir
 .checker{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;min-height:260px;
   background:linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 0 0/16px 16px,
              linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 8px 8px/16px 16px,#fff}
-#genCv{max-width:100%;max-height:300px;image-rendering:pixelated;display:block}
+.preview-box{width:100%;height:300px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#genCv{image-rendering:pixelated;display:block}
+input[type=range]{width:150px;accent-color:#39a97a;vertical-align:middle}
+#gpadVal{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#2d6b4c;min-width:104px}
 .field{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px;color:var(--muted)}
 .field > label{min-width:52px}
 input[type=number]{width:88px;padding:6px 9px;border:1px solid var(--line);border-radius:8px;font:13px ui-monospace,Menlo,monospace;color:var(--ink);background:#fff}
@@ -111,10 +114,9 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
 
   <section class="card" id="gen">
     <div class="mhead"><h3><span class="num">★</span>实时生成器<span class="tag">PNG / SVG</span></h3></div>
-    <p class="note">输入任意分辨率，选背景，实时生成并下载——没有任何服务端、没有预生成文件。'
-     图形按 5:4 等比缩放并居中；勾选「整数倍」时每个方块都是整像素，边缘绝对对齐。</p>
+    <p class="note">输入任意分辨率，选背景，实时生成并下载——没有任何服务端、没有预生成文件。图形按 5:4 等比缩放并居中；勾选「整数倍」时每个方块都是整像素，边缘绝对对齐。</p>
     <div class="gen" style="margin-top:16px">
-      <div class="checker"><canvas id="genCv"></canvas></div>
+      <div class="checker"><div class="preview-box"><canvas id="genCv"></canvas></div></div>
       <div>
         <div class="field"><label>宽度</label><input id="gw" type="number" min="1" max="4096" step="1" value="160"> px
           <label style="min-width:0">高度</label><input id="gh" type="number" min="1" max="4096" step="1" value="128"> px</div>
@@ -130,7 +132,12 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
             <option value="0">无</option><option value="1">1 格</option>
             <option value="2">2 格</option><option value="3">3 格</option>
           </select>
+          <input id="gpadRange" type="range" min="0" max="3" step="1" value="0" title="按当前分辨率可拖动的留白滑杆">
+          <span id="gpadVal">0 格</span>
+        </div>
+        <div class="field" style="margin-top:-4px"><label style="min-width:52px"></label>
           <label style="min-width:0"><input id="gint" type="checkbox" checked> 只允许整数倍缩放</label>
+          <span class="hint" style="margin:0">滑杆上限随分辨率自动变化</span>
         </div>
         <div class="presets" id="presets"></div>
         <div class="actions">
@@ -527,7 +534,12 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
   /* ---------- 生成器 UI ---------- */
   var gw = document.getElementById('gw'), gh = document.getElementById('gh'),
       gpad = document.getElementById('gpad'), gint = document.getElementById('gint'),
+      rng = document.getElementById('gpadRange'), padVal = document.getElementById('gpadVal'),
       cv = document.getElementById('genCv'), info = document.getElementById('genInfo');
+  var pad = function(){ return parseInt(rng.value, 10) || 0; };
+  function padMax(W, H){                      /* 留白上限：随当前分辨率变化，至少还能保持 1 像素 1 格 */
+    return Math.max(3, Math.min(2048, Math.floor(Math.min((W - 5) / 2, (H - 4) / 2))));
+  }
   var PRESETS = [[5,4,0],[10,8,0],[15,12,0],[16,16,0],[20,16,0],[40,32,0],[80,64,0],
                  [160,128,0],[320,256,0],[512,512,0],[1024,1024,0],[140,120,1],[70,60,1]];
   var presetBox = document.getElementById('presets');
@@ -535,23 +547,43 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
     var b = document.createElement('button');
     b.type = 'button'; b.textContent = p[0]+'×'+p[1] + (p[2] ? ' 留白' : '');
     b.title = p[2] ? '四周留出 ' + p[2] + ' 格空白' : '整数倍铺满';
-    b.onclick = function(){ gw.value = p[0]; gh.value = p[1]; gpad.value = String(p[2]); paint(); };
+    b.onclick = function(){ gw.value = p[0]; gh.value = p[1]; rng.value = String(p[2]); gpad.value = String(p[2]); paint(); };
     presetBox.appendChild(b);
   });
   function bg(){ var r = document.querySelector('input[name=bg]:checked'); return r ? r.value : 'transparent'; }
   function num(el, def){ var v = parseInt(el.value, 10); return (isFinite(v) && v > 0) ? Math.min(v, 4096) : def; }
 
-  function paint(){
-    var W = num(gw, 160), H = num(gh, 128), p = parseInt(gpad.value, 10) || 0, it = gint.checked;
-    cv.width = W; cv.height = H;
-    var ctx = cv.getContext('2d');
-    var g = draw(ctx, W, H, bg(), p, it);
-    info.textContent = '输出 ' + W + '×' + H + ' px ｜ 图形 ' + g.bw + '×' + g.bh + ' px（缩放 ' +
-      (Math.round(g.s * 100) / 100) + '×' + (it ? '，整数倍' : '') + '）｜ 画布 ' + g.cw + '×' + g.ch + ' 格 ｜ 背景 ' +
-      ({transparent:'透明', white:'白', black:'黑'})[bg()];
+  /* 预览：把图按最大可能的比例铺满预览区（放大时取整数倍，像素大小完全均匀） */
+  function fitPreview(){
+    var box = document.querySelector('.preview-box'); if (!box) return;
+    var aw = box.clientWidth || 320, ah = box.clientHeight || 300;
+    var s = Math.min(aw / cv.width, ah / cv.height);
+    if (!isFinite(s) || s <= 0) s = 1;
+    if (s >= 2) s = Math.floor(s);
+    cv.style.width = Math.max(1, Math.round(cv.width * s)) + 'px';
+    cv.style.height = Math.max(1, Math.round(cv.height * s)) + 'px';
   }
-  [gw, gh, gpad, gint].forEach(function(el){ el.addEventListener('input', paint); el.addEventListener('change', paint); });
+
+  function paint(){
+    var W = num(gw, 160), H = num(gh, 128), it = gint.checked;
+    var m = padMax(W, H);
+    if (parseInt(rng.max, 10) !== m) rng.max = m;
+    if (pad() > m) rng.value = m;
+    var p = pad();
+    gpad.selectedIndex = (p <= 3) ? p : -1;              /* 0..3 格时下拉同步，超出则由滑杆表示 */
+    padVal.textContent = p + ' 格 / 上限 ' + m;
+    cv.width = W; cv.height = H;
+    var g = draw(cv.getContext('2d'), W, H, bg(), p, it);
+    fitPreview();
+    info.textContent = '输出 ' + W + '×' + H + ' px ｜ 图形 ' + g.bw + '×' + g.bh + ' px（缩放 ' +
+      (Math.round(g.s * 100) / 100) + '×' + (it ? '，整数倍' : '') + '）｜ 画布 ' + g.cw + '×' + g.ch + ' 格 ｜ 留白 ' +
+      p + ' 格 ｜ 背景 ' + ({transparent:'透明', white:'白', black:'黑'})[bg()];
+  }
+  [gw, gh, gint].forEach(function(el){ el.addEventListener('input', paint); el.addEventListener('change', paint); });
+  rng.addEventListener('input', paint);
+  gpad.addEventListener('change', function(){ rng.value = gpad.value; paint(); });
   document.querySelectorAll('input[name=bg]').forEach(function(el){ el.addEventListener('change', paint); });
+  window.addEventListener('resize', fitPreview);
 
   function save(blob, name){
     var a = document.createElement('a'), url = URL.createObjectURL(blob);
@@ -562,7 +594,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);fon
     cv.toBlob(function(b){ save(b, 'logo-' + cv.width + 'x' + cv.height + '-' + bg() + '.png'); }, 'image/png');
   };
   document.getElementById('dlSvg').onclick = function(){
-    var src = svgText(cv.width, cv.height, bg(), parseInt(gpad.value,10)||0, gint.checked);
+    var src = svgText(cv.width, cv.height, bg(), pad(), gint.checked);
     save(new Blob([src], {type:'image/svg+xml'}), 'logo-' + cv.width + 'x' + cv.height + '-' + bg() + '.svg');
   };
   document.getElementById('cpUri').onclick = function(){
