@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>个人标志 · 5×4</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg==">
+<style>
+:root{
+  --u: 32px;                 /* 展示用：1 格 = 32px → 160×128 */
+  --c: #76DFA1;
+  --ink:#0f1f17; --muted:#5f7369; --line:#e3e9e6; --bg:#f5f8f6;
+  --code-bg:#0d1a14; --code-ink:#d7ece1;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+header{padding:48px 24px 8px;max-width:1180px;margin:0 auto}
+h1{margin:0 0 10px;font-size:26px}
+.lede{margin:0;color:var(--muted);max-width:76ch}
+.lede b{color:var(--ink)}
+main{max-width:1180px;margin:0 auto;padding:24px 24px 80px;display:flex;flex-direction:column;gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 1px 2px rgba(16,60,40,.04)}
+.mhead h3{margin:0;font-size:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;
+  background:var(--c);color:#0d2a1c;font-size:12px;font-weight:700}
+.tag{font-size:11px;font-weight:600;color:#2d6b4c;background:#e8f8ef;border:1px solid #cdeedb;padding:2px 8px;border-radius:999px}
+.note{margin:8px 0 0;color:var(--muted);font-size:13.5px;max-width:92ch}
+.note code{background:#f0f4f2;padding:1px 5px;border-radius:5px;font-size:12.5px}
+.mbody{margin-top:16px;display:grid;grid-template-columns:minmax(230px,320px) 1fr;gap:18px;align-items:start}
+@media (max-width:880px){.mbody{grid-template-columns:1fr}}
+.stage{display:flex;align-items:center;justify-content:center;min-height:190px;padding:16px;border-radius:12px;border:1px solid var(--line);
+  background:linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 0 0/16px 16px,
+             linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 8px 8px/16px 16px,#fff}
+.mark{position:relative;line-height:0}
+.code{border-radius:12px;overflow:hidden;background:var(--code-bg);min-width:0}
+.cbar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 6px 14px;background:#153025;color:#8fc3a8;font-size:11px;letter-spacing:.6px;text-transform:uppercase}
+.copy{background:#24493a;color:#d7ece1;border:0;border-radius:7px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2f5c49}
+.code pre{margin:0;padding:14px;overflow:auto;max-height:360px}
+.code-art{display:block}
+.code-ascii code{font-size:17px;line-height:1.6}
+.code code{font:12.5px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;color:var(--code-ink);white-space:pre}
+.demo-img5,.demo-svg5{width:calc(var(--u)*5);height:calc(var(--u)*4);display:block}
+.demo-img5{image-rendering:pixelated}
+.demo-svgcss{width:calc(var(--u)*5);height:calc(var(--u)*4);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E") center/contain no-repeat}
+.logo-css-grad{width:calc(var(--u)*5);height:calc(var(--u)*4);background-repeat:no-repeat;background-color:transparent;
+  background-image:linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c)),linear-gradient(var(--c),var(--c));background-size:calc(var(--u) * 1) calc(var(--u) * 2),calc(var(--u) * 1) calc(var(--u) * 1),calc(var(--u) * 1) calc(var(--u) * 2),calc(var(--u) * 1) calc(var(--u) * 2),calc(var(--u) * 1) calc(var(--u) * 1),calc(var(--u) * 1) calc(var(--u) * 2),calc(var(--u) * 1) calc(var(--u) * 2);background-position:calc(var(--u) * 0) calc(var(--u) * 1),calc(var(--u) * 1) calc(var(--u) * 0),calc(var(--u) * 1) calc(var(--u) * 2),calc(var(--u) * 2) calc(var(--u) * 1),calc(var(--u) * 3) calc(var(--u) * 0),calc(var(--u) * 3) calc(var(--u) * 2),calc(var(--u) * 4) calc(var(--u) * 1)}
+.logo-pixel{width:var(--u);height:var(--u);background:transparent;box-shadow:calc(var(--u) * 1) calc(var(--u) * 0) 0 0 var(--c),calc(var(--u) * 3) calc(var(--u) * 0) 0 0 var(--c),calc(var(--u) * 0) calc(var(--u) * 1) 0 0 var(--c),calc(var(--u) * 2) calc(var(--u) * 1) 0 0 var(--c),calc(var(--u) * 4) calc(var(--u) * 1) 0 0 var(--c),calc(var(--u) * 0) calc(var(--u) * 2) 0 0 var(--c),calc(var(--u) * 1) calc(var(--u) * 2) 0 0 var(--c),calc(var(--u) * 2) calc(var(--u) * 2) 0 0 var(--c),calc(var(--u) * 3) calc(var(--u) * 2) 0 0 var(--c),calc(var(--u) * 4) calc(var(--u) * 2) 0 0 var(--c),calc(var(--u) * 1) calc(var(--u) * 3) 0 0 var(--c),calc(var(--u) * 3) calc(var(--u) * 3) 0 0 var(--c)}
+.mark:has(.logo-pixel){width:calc(var(--u)*5);height:calc(var(--u)*4);position:relative}
+.mark:has(.logo-pixel) .logo-pixel{position:absolute;left:0;top:0}
+.logo-grid{width:calc(var(--u)*5);height:calc(var(--u)*4);display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(4,1fr)}
+.logo-grid i{display:block}
+.logo-grid i.on{background:var(--c)}
+.logo-grid i.off{background:transparent}
+.logo-table{border-collapse:collapse;table-layout:fixed;width:calc(var(--u)*5)}
+.logo-table td{width:var(--u);height:var(--u);padding:0}
+.logo-table td.on{background:var(--c)}
+#logoCanvas{width:calc(var(--u)*5);height:calc(var(--u)*4);display:block}
+.ascii-art{margin:0;font:44px/44px ui-monospace,SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  white-space:pre;color:var(--c);letter-spacing:0}
+.ladder{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.ladder figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ladder canvas{display:block;image-rendering:pixelated}
+.ladder figcaption{font-size:11px;color:var(--muted)}
+/* ---------- 规格 / 生成器 ---------- */
+.spec dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 20px;font-size:13.5px}
+.spec dt{color:var(--muted)}
+.spec dd{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--c);vertical-align:-1px;margin-right:6px}
+.gen{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media (max-width:880px){.gen{grid-template-columns:1fr}}
+.checker{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;min-height:260px;
+  background:linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 0 0/16px 16px,
+             linear-gradient(45deg,#eef2f0 25%,transparent 25%,transparent 75%,#eef2f0 75%) 8px 8px/16px 16px,#fff}
+#genCv{max-width:100%;max-height:300px;image-rendering:pixelated;display:block}
+.field{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px;color:var(--muted)}
+.field > label{min-width:52px}
+input[type=number]{width:88px;padding:6px 9px;border:1px solid var(--line);border-radius:8px;font:13px ui-monospace,Menlo,monospace;color:var(--ink);background:#fff}
+select{padding:6px 9px;border:1px solid var(--line);border-radius:8px;font:13px inherit;color:var(--ink);background:#fff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg label{padding:6px 12px;font-size:13px;cursor:pointer;background:#fff;color:var(--muted);border-right:1px solid var(--line)}
+.seg label:last-child{border-right:0}
+.seg input{display:none}
+.seg input:checked + span{color:#0d2a1c}
+.seg label:has(input:checked){background:#e8f8ef;color:#0d2a1c;font-weight:600}
+.btn{background:#0f1f17;color:#e9f6ef;border:0;border-radius:10px;padding:9px 16px;font:13.5px inherit;cursor:pointer}
+.btn:hover{background:#1d3a2c}
+.btn.alt{background:#e8f8ef;color:#1d5b3f;border:1px solid #cdeedb}
+.btn.alt:hover{background:#d9f2e5}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.presets button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font:12.5px ui-monospace,Menlo,monospace;color:#33564a;cursor:pointer}
+.presets button:hover{border-color:#9fd9bd;background:#f2fbf6}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.hint{margin:12px 0 0;font-size:12.5px;color:var(--muted);font-family:ui-monospace,Menlo,monospace;line-height:1.6}
+.dump{margin:0;font:13px/1.25 ui-monospace,Menlo,Consolas,monospace;white-space:pre;color:#2f6b52}
+.duo{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-top:14px}
+footer{max-width:1180px;margin:0 auto;padding:0 24px 60px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>个人标志 · 5 × 4</h1>
+  <p class="lede">这枚图形的最小分辨率是 <b>5 × 4 像素</b>——骨架就是 5 列 × 4 行的方块，20 格里点亮 12 格。
+  整个项目只有<b>两个图像文件</b>：<code>logo-5x4.png</code>（最小原图）和 <code>logo-16x16.png</code>（16×16 画布、最右一列留空）。
+  本页展示的其它尺寸、背景、留白版本，全部由浏览器<b>实时绘制</b>，页内可以任意输入分辨率并下载。</p>
+</header>
+<main>
+
+  <section class="card" id="gen">
+    <div class="mhead"><h3><span class="num">★</span>实时生成器<span class="tag">PNG / SVG</span></h3></div>
+    <p class="note">输入任意分辨率，选背景，实时生成并下载——没有任何服务端、没有预生成文件。'
+     图形按 5:4 等比缩放并居中；勾选「整数倍」时每个方块都是整像素，边缘绝对对齐。</p>
+    <div class="gen" style="margin-top:16px">
+      <div class="checker"><canvas id="genCv"></canvas></div>
+      <div>
+        <div class="field"><label>宽度</label><input id="gw" type="number" min="1" max="4096" step="1" value="160"> px
+          <label style="min-width:0">高度</label><input id="gh" type="number" min="1" max="4096" step="1" value="128"> px</div>
+        <div class="field"><label>背景</label>
+          <span class="seg">
+            <label><input type="radio" name="bg" value="transparent" checked><span>透明</span></label>
+            <label><input type="radio" name="bg" value="white"><span>白</span></label>
+            <label><input type="radio" name="bg" value="black"><span>黑</span></label>
+          </span>
+        </div>
+        <div class="field"><label>留白</label>
+          <select id="gpad">
+            <option value="0">无</option><option value="1">1 格</option>
+            <option value="2">2 格</option><option value="3">3 格</option>
+          </select>
+          <label style="min-width:0"><input id="gint" type="checkbox" checked> 只允许整数倍缩放</label>
+        </div>
+        <div class="presets" id="presets"></div>
+        <div class="actions">
+          <button class="btn" id="dlPng">下载 PNG</button>
+          <button class="btn alt" id="dlSvg">下载 SVG</button>
+          <button class="btn alt" id="cpUri">复制 Data URI</button>
+        </div>
+        <p class="hint" id="genInfo"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="self">
+    <div class="mhead"><h3><span class="num">↓</span>下载本页<span class="tag">单文件</span></h3></div>
+    <p class="note">本页是一个自包含的 HTML：两枚位图、全部样式与脚本都内嵌在里面。点一下把当前这一页存成 <code>logo.html</code>，离线可用。</p>
+    <div class="actions" style="margin-top:14px"><button class="btn" id="dlSelf">下载本页 (logo.html)</button>
+      <span class="hint" style="margin:0" id="selfInfo"></span></div>
+  </section>
+
+  <section class="card spec" id="spec">
+    <div class="mhead"><h3><span class="num">0</span>规格</h3><span class="tag">位图实测</span></div>
+    <div class="mbody" style="grid-template-columns:1fr">
+      <dl>
+        <dt>最小分辨率</dt><dd>5 × 4 px（20 格，点亮 12 格）</dd>
+        <dt>无损缩放</dt><dd>5k × 4k &nbsp;(k = 1,2,3,…) → 5×4 / 10×8 / 15×12 / 20×16 / 25×20 …</dd>
+        <dt>16×16 画布</dt><dd>图形放大 3 倍 = 15×12，左侧起、上下各空 2 行，最右一列留空</dd>
+        <dt>颜色</dt><dd><span class="sw"></span>#76DFA1 = rgb(118, 223, 161)，单色无渐变</dd>
+        <dt>矢量分解</dt><dd>7 个矩形 / 1 条 path（7 个子路径）</dd>
+        <dt>文件</dt><dd>logo-5x4.png · logo-16x16.png &nbsp;（其余尺寸由本页实时生成）</dd>
+      </dl>
+      <div class="duo">
+        <div style="text-align:center">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAECAYAAABGM/VAAAAAIElEQVR4nGNgYGBgKLu/8D8yjSFQdn/hf0a4LDpAVw0AMpcXqr3h8pIAAAAASUVORK5CYII=" width="150" height="120" alt="5×4 原图" style="image-rendering:pixelated;border:1px solid var(--line);border-radius:8px">
+          <div class="hint" style="margin-top:6px">logo-5x4.png</div>
+        </div>
+        <div style="text-align:center">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAOklEQVR4nGNgGGjAiMwpu7/wP4zdpRjPSEicgYGBgYlSF1BsACOpzkYXH2ReIBUMEi8gc4ZmQhp4AADoeiAVU5LFxwAAAABJRU5ErkJggg==" width="160" height="160" alt="16×16" style="image-rendering:pixelated;border:1px solid var(--line);border-radius:8px">
+          <div class="hint" style="margin-top:6px">logo-16x16.png</div>
+        </div>
+        <pre class="dump">................
+................
+...###...###....
+...###...###....
+...###...###....
+###...###...###.
+###...###...###.
+###...###...###.
+###############.
+###############.
+###############.
+...###...###....
+...###...###....
+...###...###....
+................
+................</pre>
+      </div>
+    </div>
+  </section>
+
+
+  <article class="card" id="m-bitmap">
+    <div class="mhead"><h3><span class="num">1</span>base64 位图<span class="tag">位图</span></h3></div>
+    <p class="note">就是那枚原始文件 <code>logo-5x4.png</code>——只有 <b>5×4 像素</b>，以 data URI 内嵌，页面零外部依赖。放大时必须加 <code>image-rendering:pixelated</code>，否则浏览器会把它插值糊掉。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><img class="demo-img5" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAECAYAAABGM/VAAAAAIElEQVR4nGNgYGBgKLu/8D8yjSFQdn/hf0a4LDpAVw0AMpcXqr3h8pIAAAAASUVORK5CYII=" alt="标志"></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAECAYAAABGM/VAAAAAIElEQVR4nGNgYGBgKLu/8D8yjSFQdn/hf0a4LDpAVw0AMpcXqr3h8pIAAAAASUVORK5CYII=" width="160" height="128" alt="标志"
+     style="image-rendering:pixelated"&gt;
+&lt;!-- 原始文件 logo-5x4.png 只有 5×4 像素，靠 image-rendering 放大 --&gt;</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-svg">
+    <div class="mhead"><h3><span class="num">2</span>内联 SVG · 矩形<span class="tag">矢量</span></h3></div>
+    <p class="note">把 5×4 位图分解成 <b>7 个矩形</b>（逐列纵向游程，已是最少的矩形分解）。纯矢量，任意缩放不糊。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><svg class="demo-svg5" viewBox="0 0 5 4" shape-rendering="crispEdges" fill="#76DFA1" role="img"><rect x="0" y="1" width="1" height="2"/><rect x="1" y="0" width="1" height="1"/><rect x="1" y="2" width="1" height="2"/><rect x="2" y="1" width="1" height="2"/><rect x="3" y="0" width="1" height="1"/><rect x="3" y="2" width="1" height="2"/><rect x="4" y="1" width="1" height="2"/></svg></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;svg viewBox="0 0 5 4" width="160" height="128" role="img" aria-label="标志"
+     fill="#76DFA1" shape-rendering="crispEdges"&gt;
+  &lt;rect x="0" y="1" width="1" height="2"/&gt;
+  &lt;rect x="1" y="0" width="1" height="1"/&gt;
+  &lt;rect x="1" y="2" width="1" height="2"/&gt;
+  &lt;rect x="2" y="1" width="1" height="2"/&gt;
+  &lt;rect x="3" y="0" width="1" height="1"/&gt;
+  &lt;rect x="3" y="2" width="1" height="2"/&gt;
+  &lt;rect x="4" y="1" width="1" height="2"/&gt;
+&lt;/svg&gt;</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-svgpath">
+    <div class="mhead"><h3><span class="num">3</span>SVG · 单条 path<span class="tag">矢量</span></h3></div>
+    <p class="note">同一组矩形压成一条 <code>&lt;path&gt;</code>，7 个子路径、一共 60 来个字符。适合存成 .svg 或喂给图标系统。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><svg class="demo-svg5" viewBox="0 0 5 4" shape-rendering="crispEdges" fill="#76DFA1" role="img"><path d="M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z"/></svg></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;svg viewBox="0 0 5 4" width="160" height="128" role="img" aria-label="标志"&gt;
+  &lt;path fill="#76DFA1" shape-rendering="crispEdges"
+        d="M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z"/&gt;
+&lt;/svg&gt;</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-svgcss">
+    <div class="mhead"><h3><span class="num">4</span>SVG 作为 CSS 背景<span class="tag">矢量 + CSS</span></h3></div>
+    <p class="note">把那条 path 转义成 data URI 交给 CSS 的 <code>background</code>。DOM 里只有一个空 div。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><div class="demo-svgcss"></div></div></div>
+      <div class="code ">
+        <div class="cbar"><span>css</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>.logo-svg-bg {
+  width: 160px; height: 128px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4' shape-rendering='crispEdges'%3E%3Cpath fill='%2376DFA1' d='M0 1h1v2h-1zM1 0h1v1h-1zM1 2h1v2h-1zM2 1h1v2h-1zM3 0h1v1h-1zM3 2h1v2h-1zM4 1h1v2h-1z'/%3E%3C/svg%3E") center / contain no-repeat;
+}</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-grad">
+    <div class="mhead"><h3><span class="num">5</span>纯 CSS · 多层渐变<span class="tag">CSS</span></h3></div>
+    <p class="note">不用 SVG、不用图片、不用子元素：<b>7 层</b> <code>linear-gradient</code> 各负责一个矩形，用 <code>background-size</code>／<code>background-position</code> 摆位。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><div class="logo-css-grad"></div></div></div>
+      <div class="code ">
+        <div class="cbar"><span>css</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>.logo-css-grad {
+  --u: 32px;                /* 1 格 = 32px → 160×128 */
+  --c: #76DFA1;
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 4);
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c));
+  background-size:
+    calc(var(--u) * 1) calc(var(--u) * 2),
+    calc(var(--u) * 1) calc(var(--u) * 1),
+    calc(var(--u) * 1) calc(var(--u) * 2),
+    calc(var(--u) * 1) calc(var(--u) * 2),
+    calc(var(--u) * 1) calc(var(--u) * 1),
+    calc(var(--u) * 1) calc(var(--u) * 2),
+    calc(var(--u) * 1) calc(var(--u) * 2);
+  background-position:
+    calc(var(--u) * 0) calc(var(--u) * 1),
+    calc(var(--u) * 1) calc(var(--u) * 0),
+    calc(var(--u) * 1) calc(var(--u) * 2),
+    calc(var(--u) * 2) calc(var(--u) * 1),
+    calc(var(--u) * 3) calc(var(--u) * 0),
+    calc(var(--u) * 3) calc(var(--u) * 2),
+    calc(var(--u) * 4) calc(var(--u) * 1);
+}</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-shadow">
+    <div class="mhead"><h3><span class="num">6</span>纯 CSS · box-shadow 像素画<span class="tag">CSS</span></h3></div>
+    <p class="note">一个 <code>--u × --u</code> 的透明方块，位图里 <b>12 个像素</b>就是 12 条 box-shadow。源码短，且逐像素可控。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><div class="logo-pixel"></div></div></div>
+      <div class="code ">
+        <div class="cbar"><span>css</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>.logo-pixel {
+  --u: 32px;
+  --c: #76DFA1;
+  width: var(--u);
+  height: var(--u);
+  background: transparent;   /* 自身透明，整幅图全部由阴影画出 */
+  box-shadow:
+    calc(var(--u) * 1) calc(var(--u) * 0) 0 0 var(--c),
+    calc(var(--u) * 3) calc(var(--u) * 0) 0 0 var(--c),
+    calc(var(--u) * 0) calc(var(--u) * 1) 0 0 var(--c),
+    calc(var(--u) * 2) calc(var(--u) * 1) 0 0 var(--c),
+    calc(var(--u) * 4) calc(var(--u) * 1) 0 0 var(--c),
+    calc(var(--u) * 0) calc(var(--u) * 2) 0 0 var(--c),
+    calc(var(--u) * 1) calc(var(--u) * 2) 0 0 var(--c),
+    calc(var(--u) * 2) calc(var(--u) * 2) 0 0 var(--c),
+    calc(var(--u) * 3) calc(var(--u) * 2) 0 0 var(--c),
+    calc(var(--u) * 4) calc(var(--u) * 2) 0 0 var(--c),
+    calc(var(--u) * 1) calc(var(--u) * 3) 0 0 var(--c),
+    calc(var(--u) * 3) calc(var(--u) * 3) 0 0 var(--c);
+}
+/* 12 个像素 = 12 条 box-shadow */</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-grid">
+    <div class="mhead"><h3><span class="num">7</span>CSS Grid · 5 × 4<span class="tag">CSS</span></h3></div>
+    <p class="note">图形的本来面目就是 5 列 × 4 行。20 个 <code>&lt;i&gt;</code> 里点亮 12 个，<code>repeat(5,1fr)</code>／<code>repeat(4,1fr)</code> 即可。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><div class="logo-grid"><i class="off"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="off"></i><i class="on"></i><i class="off"></i></div></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;div class="logo-grid"&gt;
+  &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt;
+  &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt;
+  &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt;
+  &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt; &lt;i class="on"&gt;&lt;/i&gt; &lt;i class="off"&gt;&lt;/i&gt;
+&lt;/div&gt;
+
+.logo-grid {
+  --u: 32px;
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 4);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+.logo-grid i { display: block; }
+.logo-grid i.on  { background: #76DFA1; }
+.logo-grid i.off { background: transparent; }</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-table">
+    <div class="mhead"><h3><span class="num">8</span>HTML 表格<span class="tag">HTML</span></h3></div>
+    <p class="note">用 <code>&lt;table&gt;</code> 直接摆 5×4 个格子。最古老的做法，反而语义清楚、不依赖定位。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><table class="logo-table"><tr><td></td><td class="on"></td><td></td><td class="on"></td><td></td></tr><tr><td class="on"></td><td></td><td class="on"></td><td></td><td class="on"></td></tr><tr><td class="on"></td><td class="on"></td><td class="on"></td><td class="on"></td><td class="on"></td></tr><tr><td></td><td class="on"></td><td></td><td class="on"></td><td></td></tr></table></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;table class="logo-table"&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td class="on"&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+.logo-table { --u: 32px; border-collapse: collapse; table-layout: fixed;
+  width: calc(var(--u) * 5); }
+.logo-table td { width: calc(var(--u) * 1); height: calc(var(--u) * 1); padding: 0; }
+.logo-table td.on { background: #76DFA1; }</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-canvas">
+    <div class="mhead"><h3><span class="num">9</span>Canvas 2D<span class="tag">脚本</span></h3></div>
+    <p class="note">运行时用 JS 画 12 个 <code>fillRect</code>。下面的生成器就是用这个路子把图缩放到任意尺寸的。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><canvas id="logoCanvas" width="320" height="256"></canvas></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html + js</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;canvas id="logoCanvas" width="320" height="256"&gt;&lt;/canvas&gt;
+&lt;script&gt;
+  const U = 64;                                  // 1 格 = 64px
+  const PAT = [[0, 1, 0, 1, 0],
+               [1, 0, 1, 0, 1],
+               [1, 1, 1, 1, 1],
+               [0, 1, 0, 1, 0]];
+  const ctx = document.getElementById('logoCanvas').getContext('2d');
+  ctx.fillStyle = '#76DFA1';
+  PAT.forEach((row, j) =&gt; row.forEach((on, i) =&gt; {
+    if (on) ctx.fillRect(i * U, j * U, U, U);
+  }));
+&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-text">
+    <div class="mhead"><h3><span class="num">10</span>文本 · 整格字符<span class="tag">文本</span></h3></div>
+    <p class="note">1 个字符 = 1 格，<b>4 行</b>就画完了——因为最小分辨率只有 5×4。注意行高必须等于字符宽度，格子才是正方形。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><pre class="ascii-art"> █ █ 
+█ █ █
+█████
+ █ █ </pre></div></div>
+      <div class="code code-ascii">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;pre class="ascii"&gt;
+<span class="code-art"> █ █ 
+█ █ █
+█████
+ █ █ </span>
+&lt;/pre&gt;
+
+/* 行高必须等于字符宽度（半格则 ×2），格子才是正方形 */
+.ascii { font: 44px/44px ui-monospace, Menlo, Consolas, monospace; }</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-texthalf">
+    <div class="mhead"><h3><span class="num">11</span>文本 · 半格字符<span class="tag">文本</span></h3></div>
+    <p class="note">用 <code>█ ▀ ▄</code> 把 4 行再压成 <b>2 行</b>。要求「行高 = 2 × 字符宽度」，否则上下半格会裂开；本页用脚本实测字宽后设行高，所以稳定。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><pre class="ascii-art ascii-half">▄▀▄▀▄
+▀█▀█▀</pre></div></div>
+      <div class="code code-ascii">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>&lt;pre class="ascii-half"&gt;
+<span class="code-art ascii-half">▄▀▄▀▄
+▀█▀█▀</span>
+&lt;/pre&gt;
+
+/* 行高必须等于字符宽度（半格则 ×2），格子才是正方形 */
+.ascii-half { font: 44px/44px ui-monospace, Menlo, Consolas, monospace; }</code></pre>
+      </div>
+    </div>
+  </article>
+  <article class="card" id="m-scale">
+    <div class="mhead"><h3><span class="num">12</span>尺寸阶梯（实时生成）<span class="tag">Canvas</span></h3></div>
+    <p class="note">下面每一档都是浏览器此刻用 5×4 位图实时画出来的，不是文件。整数倍放大最锐利：5×4 → 160×128 是 32 倍。</p>
+    <div class="mbody">
+      <div class="stage"><div class="mark"><div class="ladder" id="ladder"></div></div></div>
+      <div class="code ">
+        <div class="cbar"><span>html</span><button class="copy" type="button">复制源码</button></div>
+        <pre><code>/* 所有尺寸都由同一枚 5×4 位图实时缩放，整数倍最锐利 */
+&lt;img src="logo-5x4.png" width="5" height="4" style="image-rendering:pixelated"&gt;
+&lt;img src="logo-5x4.png" width="10" height="8" style="image-rendering:pixelated"&gt;
+&lt;img src="logo-5x4.png" width="20" height="16" style="image-rendering:pixelated"&gt;
+&lt;img src="logo-5x4.png" width="40" height="32" style="image-rendering:pixelated"&gt;
+&lt;img src="logo-5x4.png" width="80" height="64" style="image-rendering:pixelated"&gt;
+&lt;img src="logo-5x4.png" width="160" height="128" style="image-rendering:pixelated"&gt;
+</code></pre>
+      </div>
+    </div>
+  </article>
+
+  <section class="card" id="files">
+    <div class="mhead"><h3><span class="num">※</span>关于文件</h3></div>
+    <p class="note">项目里只有两枚位图，其余全部实时生成：<br>
+      · <code>logo-5x4.png</code> —— 最小分辨率原图，5×4 像素，透明背景。<br>
+      · <code>logo-16x16.png</code> —— 16×16 画布，图形 15×12 靠左、最右一列留空。<br>
+      想要 10×8、40×32、320×256、带留白、黑底、白底……都用上面的生成器现做现下，不再堆文件。</p>
+  </section>
+
+</main>
+<footer>单文件、零依赖。图标本体（5×4 与 16×16 的 base64 PNG）全部内嵌在本页中，另存为 .html 即可离线使用。</footer>
+
+<script>
+(function(){
+  'use strict';
+  var GREEN = '#76DFA1';
+  var PAT = [[0, 1, 0, 1, 0], [1, 0, 1, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 0]];
+  var FALLBACK = PAT.map(function(r){return r.slice();});
+
+  /* ---------- 从内嵌的 5×4 位图解码出像素（保证一切来源于那枚位图） ---------- */
+  var img5 = new Image();
+  img5.onload = function(){
+    try{
+      var c = document.createElement('canvas'); c.width = 5; c.height = 4;
+      var x = c.getContext('2d'); x.drawImage(img5, 0, 0);
+      var d = x.getImageData(0, 0, 5, 4).data, m = [];
+      for (var j = 0; j < 4; j++){ var row = []; for (var i = 0; i < 5; i++) row.push(d[(j*5+i)*4+3] > 128 ? 1 : 0); m.push(row); }
+      PAT = m; FALLBACK = m.map(function(r){return r.slice();});
+    }catch(err){ /* 保底用内嵌数组 */ }
+    build(); paint();
+  };
+  img5.onerror = function(){ build(); paint(); };
+  img5.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAECAYAAABGM/VAAAAAIElEQVR4nGNgYGBgKLu/8D8yjSFQdn/hf0a4LDpAVw0AMpcXqr3h8pIAAAAASUVORK5CYII=';
+
+  /* ---------- 几何：把 5×4 等比缩放并居中到 W×H，边界取整保证像素对齐 ---------- */
+  function geom(W, H, pad, integer){
+    var cw = 5 + 2*pad, ch = 4 + 2*pad;
+    var s = Math.min(W / cw, H / ch);
+    if (integer){ var f = Math.floor(s + 1e-9); if (f >= 1) s = f; }
+    var bw = Math.max(cw, Math.round(cw * s)), bh = Math.max(ch, Math.round(ch * s));
+    var ox = Math.floor((W - bw) / 2), oy = Math.floor((H - bh) / 2);   /* 余数留到右/下，16×16 时正好空出最右一列 */
+    return { s:s, cw:cw, ch:ch, bw:bw, bh:bh, ox:ox, oy:oy,
+      cx:function(i){ return ox + Math.round(i * bw / cw); },
+      cy:function(j){ return oy + Math.round(j * bh / ch); } };
+  }
+  function draw(ctx, W, H, bg, pad, integer){
+    ctx.clearRect(0, 0, W, H);
+    if (bg === 'white'){ ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H); }
+    else if (bg === 'black'){ ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, W, H); }
+    var g = geom(W, H, pad, integer);
+    ctx.fillStyle = GREEN;
+    for (var j = 0; j < 4; j++) for (var i = 0; i < 5; i++) if (PAT[j][i]){
+      var x0 = g.cx(i+pad), x1 = g.cx(i+1+pad), y0 = g.cy(j+pad), y1 = g.cy(j+1+pad);
+      ctx.fillRect(x0, y0, x1-x0, y1-y0);
+    }
+    return g;
+  }
+  function svgText(W, H, bg, pad, integer){
+    var g = geom(W, H, pad, integer), s = '';
+    s += '<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" shape-rendering="crispEdges">\n';
+    if (bg === 'white') s += '  <rect width="'+W+'" height="'+H+'" fill="#ffffff"/>\n';
+    if (bg === 'black') s += '  <rect width="'+W+'" height="'+H+'" fill="#000000"/>\n';
+    s += '  <g fill="'+GREEN+'">\n';
+    for (var j = 0; j < 4; j++) for (var i = 0; i < 5; i++) if (PAT[j][i]){
+      var x0 = g.cx(i+pad), x1 = g.cx(i+1+pad), y0 = g.cy(j+pad), y1 = g.cy(j+1+pad);
+      s += '    <rect x="'+x0+'" y="'+y0+'" width="'+(x1-x0)+'" height="'+(y1-y0)+'"/>\n';
+    }
+    return s + '  </g>\n</svg>\n';
+  }
+
+  /* ---------- 生成器 UI ---------- */
+  var gw = document.getElementById('gw'), gh = document.getElementById('gh'),
+      gpad = document.getElementById('gpad'), gint = document.getElementById('gint'),
+      cv = document.getElementById('genCv'), info = document.getElementById('genInfo');
+  var PRESETS = [[5,4,0],[10,8,0],[15,12,0],[16,16,0],[20,16,0],[40,32,0],[80,64,0],
+                 [160,128,0],[320,256,0],[512,512,0],[1024,1024,0],[140,120,1],[70,60,1]];
+  var presetBox = document.getElementById('presets');
+  PRESETS.forEach(function(p){
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = p[0]+'×'+p[1] + (p[2] ? ' 留白' : '');
+    b.title = p[2] ? '四周留出 ' + p[2] + ' 格空白' : '整数倍铺满';
+    b.onclick = function(){ gw.value = p[0]; gh.value = p[1]; gpad.value = String(p[2]); paint(); };
+    presetBox.appendChild(b);
+  });
+  function bg(){ var r = document.querySelector('input[name=bg]:checked'); return r ? r.value : 'transparent'; }
+  function num(el, def){ var v = parseInt(el.value, 10); return (isFinite(v) && v > 0) ? Math.min(v, 4096) : def; }
+
+  function paint(){
+    var W = num(gw, 160), H = num(gh, 128), p = parseInt(gpad.value, 10) || 0, it = gint.checked;
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d');
+    var g = draw(ctx, W, H, bg(), p, it);
+    info.textContent = '输出 ' + W + '×' + H + ' px ｜ 图形 ' + g.bw + '×' + g.bh + ' px（缩放 ' +
+      (Math.round(g.s * 100) / 100) + '×' + (it ? '，整数倍' : '') + '）｜ 画布 ' + g.cw + '×' + g.ch + ' 格 ｜ 背景 ' +
+      ({transparent:'透明', white:'白', black:'黑'})[bg()];
+  }
+  [gw, gh, gpad, gint].forEach(function(el){ el.addEventListener('input', paint); el.addEventListener('change', paint); });
+  document.querySelectorAll('input[name=bg]').forEach(function(el){ el.addEventListener('change', paint); });
+
+  function save(blob, name){
+    var a = document.createElement('a'), url = URL.createObjectURL(blob);
+    a.href = url; a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 1500);
+  }
+  document.getElementById('dlPng').onclick = function(){
+    cv.toBlob(function(b){ save(b, 'logo-' + cv.width + 'x' + cv.height + '-' + bg() + '.png'); }, 'image/png');
+  };
+  document.getElementById('dlSvg').onclick = function(){
+    var src = svgText(cv.width, cv.height, bg(), parseInt(gpad.value,10)||0, gint.checked);
+    save(new Blob([src], {type:'image/svg+xml'}), 'logo-' + cv.width + 'x' + cv.height + '-' + bg() + '.svg');
+  };
+  document.getElementById('cpUri').onclick = function(){
+    var t = cv.toDataURL('image/png'), btn = this;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
+      .then(function(){ btn.textContent = '已复制'; }, function(){ btn.textContent = '复制失败'; })
+      .then(function(){ setTimeout(function(){ btn.textContent = '复制 Data URI'; }, 1300); });
+  };
+
+  /* ---------- 下载本页 ---------- */
+  document.getElementById('selfInfo').textContent = '约 ' + Math.round(document.documentElement.outerHTML.length / 1024) + ' KB';
+  document.getElementById('dlSelf').onclick = function(){
+    var src = '<!doctype html>\n' + document.documentElement.outerHTML;
+    save(new Blob([src], {type:'text/html;charset=utf-8'}), 'logo.html');
+  };
+
+  /* ---------- 复制按钮 ---------- */
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.closest('.code').querySelector('code').innerText;
+      var done = function(){ btn.textContent = '已复制'; setTimeout(function(){ btn.textContent = '复制源码'; }, 1200); };
+      var fb = function(t){ var ta = document.createElement('textarea'); ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function(){ fb(text); done(); });
+      else { fb(text); done(); }
+    });
+  });
+
+  /* ---------- 文本字符画：行高 = 字符宽度（半格则 ×2） ---------- */
+  function fixAscii(){
+    document.querySelectorAll('.ascii-art, .code-art').forEach(function(el){
+      var half = el.classList.contains('ascii-half');
+      var s = document.createElement('span');
+      s.textContent = new Array(21).join('█');
+      var cs = getComputedStyle(el);
+      s.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;letter-spacing:' + cs.letterSpacing +
+                        ';font:' + cs.font;
+      document.body.appendChild(s);
+      var adv = s.getBoundingClientRect().width / 20;
+      s.remove();
+      if (adv > 0) el.style.lineHeight = (half ? adv * 2 - Math.max(1, adv * 0.04) : adv) + 'px';
+      /* 半格：行高比 2×字宽 略小一点，让上下半格重叠 1px，消除接缝 */
+    });
+  }
+
+  /* ---------- 尺寸阶梯（实时画） ---------- */
+  function ladder(){
+    var box = document.getElementById('ladder'); if (!box) return;
+    box.innerHTML = '';
+    [1,2,4,8,16,32].forEach(function(k){
+      var W = 5*k, H = 4*k;
+      var f = document.createElement('figure');
+      var c = document.createElement('canvas'); c.width = W; c.height = H;
+      c.style.width = Math.max(W, 5) + 'px'; c.style.height = Math.max(H, 4) + 'px';
+      draw(c.getContext('2d'), W, H, 'transparent', 0, true);
+      var cap = document.createElement('figcaption'); cap.textContent = W + '×' + H;
+      f.appendChild(c); f.appendChild(cap); box.appendChild(f);
+    });
+  }
+
+  function build(){
+    /* 第 9 项 Canvas 演示 */
+    var lc = document.getElementById('logoCanvas');
+    if (lc){ var U = lc.width / 5, x = lc.getContext('2d'); x.fillStyle = GREEN;
+      for (var j=0;j<4;j++) for (var i=0;i<5;i++) if (PAT[j][i]) x.fillRect(i*U, j*U, U, U); }
+    ladder(); fixAscii();
+  }
+  window.addEventListener('resize', fixAscii);
+  document.fonts && document.fonts.ready && document.fonts.ready.then(fixAscii);
+})();
+</script>
+</body>
+</html>
