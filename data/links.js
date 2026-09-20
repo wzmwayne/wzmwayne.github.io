@@ -44,6 +44,11 @@ var categories = {
         "github加速": "https://wzml.cc.cd/ghp",
         "教你 Bing 搜索": "https://wzmwayne.github.io/bing-search-tutorial/"
     },
+    "方向管理（Android 免 root 方向管理器）": {
+        "项目主页 / README": "https://github.com/wzmwayne/orientation_manager",
+        "下载最新版 APK": "https://github.com/wzmwayne/orientation_manager/releases/latest",
+        "下载 APK（ghproxy）": "https://ghproxy.net/github.com/wzmwayne/orientation_manager/releases/download/v0.18.0/OrientationManager-v0.18.0-debug.apk"
+    },
     "游戏与启动": {
         "MC Lunch": "https://wzml.cc.cd/mclunch/"
     },
