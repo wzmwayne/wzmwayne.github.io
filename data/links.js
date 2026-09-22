@@ -47,7 +47,7 @@ var categories = {
     "方向管理（Android 免 root 方向管理器）": {
         "项目主页 / README": "https://github.com/wzmwayne/orientation_manager",
         "下载最新版 APK": "https://github.com/wzmwayne/orientation_manager/releases/latest",
-        "下载 APK（ghproxy）": "https://ghproxy.net/github.com/wzmwayne/orientation_manager/releases/download/v0.21.0/OrientationManager-v0.21.0-debug.apk"
+        "下载 APK（ghproxy）": "https://ghproxy.net/github.com/wzmwayne/orientation_manager/releases/download/v0.22.0/OrientationManager-v0.22.0-debug.apk"
     },
     "游戏与启动": {
         "MC Lunch": "https://wzml.cc.cd/mclunch/"
