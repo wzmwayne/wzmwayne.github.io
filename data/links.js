@@ -10,7 +10,7 @@
 var categories = {
     "快链接（仅提供链接，不承担任何责任）": {
         "setting": { "collapsed": true },
-        "老豆荚旧版": "https://oldpods.mysxl.cn/old",
+        "老豆荚旧版": "http://2012rs.oldpods.cn",
         "“新月的摇篮曲”歌曲下载": "https://ghproxy.net/github.com/wzmwayne/wzmwayne.github.io/releases/download/data/HOYO-MiX.-.Lullaby.of.the.New.Moon.I.Somnias.a.Luna.mp3",
         "读日月前事（并非整活）": "https://whdn.lanzouu.com/iyxXS3qrtvtg",
         "番茄小说简版": "https://whdn.lanzouu.com/iKRP1427pd4b",
